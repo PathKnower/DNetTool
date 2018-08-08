@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleConnect", "ModuleConnect\ModuleConnect.csproj", "{600A9E5E-4FA7-4DE7-980F-F0F4FD156B6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleConnect", "ModuleConnect\ModuleConnect.csproj", "{600A9E5E-4FA7-4DE7-980F-F0F4FD156B6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNet_Controllers", "DNet_Controllers\DNet_Controllers.csproj", "{74AFB02F-DCA6-4356-AE50-216E66BDF19E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Controllers", "DNet_Controllers\DNet_Controllers.csproj", "{74AFB02F-DCA6-4356-AE50-216E66BDF19E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNet_Processing", "DNet_Processing\DNet_Processing.csproj", "{C8173449-C06B-42CF-8412-DAB879E17B37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Processing", "DNet_Processing\DNet_Processing.csproj", "{C8173449-C06B-42CF-8412-DAB879E17B37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNet_Manager", "DNet_Manager\DNet_Manager.csproj", "{1AC479FA-896D-4C98-B545-D41E9A7724D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Manager", "DNet_Manager\DNet_Manager.csproj", "{1AC479FA-896D-4C98-B545-D41E9A7724D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNet_Hub", "DNet_Hub\DNet_Hub.csproj", "{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1AC479FA-896D-4C98-B545-D41E9A7724D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC479FA-896D-4C98-B545-D41E9A7724D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC479FA-896D-4C98-B545-D41E9A7724D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
