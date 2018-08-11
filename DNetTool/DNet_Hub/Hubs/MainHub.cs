@@ -8,9 +8,17 @@ namespace DNet_Hub.Hubs
 {
     public class MainHub : Hub
     {
-        public async Task OnRegister()
+        /// <summary>
+        /// Register any module on their group
+        /// </summary>
+        /// <param name="groupName">Module group</param>
+        /// <returns></returns>
+        public async Task RegisterModule(string groupName)
         {
-            await Clients.AllExcept(Context.ConnectionId).SendAsync("");
+            await this.Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+
+            await this.Clients.Caller.SendAsync("OnRegister", "Ok"); //Callback that successfull register module
         }
+        
     }
 }
