@@ -47,7 +47,7 @@ namespace DNet_Hub
                 config.MapHub<MainHub>("/mainhub");
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

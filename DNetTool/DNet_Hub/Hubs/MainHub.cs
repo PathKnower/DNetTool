@@ -20,7 +20,10 @@ namespace DNet_Hub.Hubs
             await this.Clients.Caller.SendAsync("OnRegister", "Ok"); //Callback that successfull register module
         }
         
+        public async Task UnregisterModule()
+        {
 
+        }
 
     }
 }

@@ -29,8 +29,9 @@ namespace ModuleConnect
                 .Build();
 
             hubConnection.On<string>("OnRegister", OnRegister);
-        }
 
+            hubConnection.StartAsync();
+        }
 
         #region RegisterModule logic
         public async void Register(string moduleType)
