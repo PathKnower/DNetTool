@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DNet_Hub.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,6 +42,10 @@ namespace DNet_Hub
             {
                 app.UseHsts();
             }
+            app.UseSignalR(config =>
+            {
+                config.MapHub<MainHub>("/mainhub");
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();

@@ -32,7 +32,8 @@ namespace ModuleConnect
         }
 
 
-        private async void Register(string moduleType)
+        #region RegisterModule logic
+        public async void Register(string moduleType)
         {
             try
             {
@@ -57,5 +58,7 @@ namespace ModuleConnect
                 return;
             }
         }
+        #endregion
+
     }
 }

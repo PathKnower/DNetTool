@@ -11,7 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Processing", "DNet_Pro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Manager", "DNet_Manager\DNet_Manager.csproj", "{1AC479FA-896D-4C98-B545-D41E9A7724D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNet_Hub", "DNet_Hub\DNet_Hub.csproj", "{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Hub", "DNet_Hub\DNet_Hub.csproj", "{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BEBA127B-F488-4D68-8070-886CE0D9356F}"
+	ProjectSection(SolutionItems) = preProject
+		nlog.config = nlog.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{D17FB79C-8281-447D-9BA1-B4E483F1B15A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNet_Hub.Tests", "DNet_Hub.Tests\DNet_Hub.Tests.csproj", "{98D030CB-7899-477D-ACA4-8D747C430D3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +48,16 @@ Global
 		{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B9FE73B-8EC1-43AF-AD7D-C28DF4D6123D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98D030CB-7899-477D-ACA4-8D747C430D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98D030CB-7899-477D-ACA4-8D747C430D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98D030CB-7899-477D-ACA4-8D747C430D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98D030CB-7899-477D-ACA4-8D747C430D3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{98D030CB-7899-477D-ACA4-8D747C430D3C} = {D17FB79C-8281-447D-9BA1-B4E483F1B15A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FD486BB-79C0-4756-B7AA-47F957DFD129}
