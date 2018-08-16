@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ModuleConnect
+namespace ModuleConnect.Implements
 {
     class ServiceCollector
     {

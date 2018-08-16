@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Net;
-
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
-
+using ModuleConnect.Interfaces;
 using NLog;
 
-namespace ModuleConnect
+namespace ModuleConnect.Implements
 {
-    public class Connect
+    public class HubConnect : IConnect
     {
         public delegate void ConnectionHandle(string uri);
         public event ConnectionHandle SuccessfullRegister;
@@ -18,7 +18,7 @@ namespace ModuleConnect
 
         HubConnection hubConnection;
 
-        public Connect(string connectUri)
+        public HubConnect(string connectUri)
         {
             logger = LogManager.GetCurrentClassLogger();
 
@@ -34,7 +34,7 @@ namespace ModuleConnect
         }
 
         #region RegisterModule logic
-        public async void Register(string moduleType)
+        public async Task Register(string moduleType)
         {
             try
             {
@@ -61,5 +61,13 @@ namespace ModuleConnect
         }
         #endregion
 
+        #region Inteface Implementation
+
+        public async Task Connect(string moduleType)
+        {
+            await Register(moduleType);
+        }
+
+        #endregion
     }
 }
