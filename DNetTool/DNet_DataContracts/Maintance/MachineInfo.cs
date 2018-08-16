@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace DNet_DataContracts
+namespace DNet_DataContracts.Maintance
 {
     public class MachineInfo
     {
@@ -26,6 +26,16 @@ namespace DNet_DataContracts
         /// Represent available memory in machine in MB
         /// </summary>
         public long AvailableMemory { get; set; }
+
+        /// <summary>
+        /// Performance points of current machine
+        /// </summary>
+        public int PerformancePoint { get; set; }
+
+        //Processor architecture
+
+        //Hard drive
+
 
     }
 }
