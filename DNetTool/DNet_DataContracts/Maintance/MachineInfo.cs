@@ -18,6 +18,11 @@ namespace DNet_DataContracts.Maintance
         public int CPUCores { get; set; }
 
         /// <summary>
+        /// Represent CPU Architecture realtes to calculate PP as coefficent
+        /// </summary>
+        public CPUArchitectures CPUArchitecture { get; set; }
+
+        /// <summary>
         /// Represent all memory in machine in MB
         /// </summary>
         public long AllMemory { get; set; }
@@ -31,11 +36,7 @@ namespace DNet_DataContracts.Maintance
         /// Performance points of current machine
         /// </summary>
         public int PerformancePoint { get; set; }
-
-        //Processor architecture
-
-        //Hard drive
-
-
+        
+        //Hard drive: Maybe, in future 
     }
 }

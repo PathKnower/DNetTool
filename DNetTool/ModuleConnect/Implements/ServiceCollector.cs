@@ -9,11 +9,16 @@ namespace ModuleConnect.Implements
     public class ServiceCollector : IServiceCollector
     {
         readonly PlatformID currentPlatform;
+        MachineInfo machineInfo;
 
         public ServiceCollector()
         {
             currentPlatform = Environment.OSVersion.Platform;
         }
+
+        #region Diagnostics function
+
+        //TODO: Rework to get more info
 
         /// <summary>
         /// Get full cpu info. return format depence on OS
@@ -48,15 +53,90 @@ namespace ModuleConnect.Implements
             }
             else
             {
-                result += "free -m | grep Mem".Bash(); //total/free memory, parse "Mem:" and split by " " 
+                result += "free -m | grep Mem".Bash(); //total/used/free memory, parse "Mem:" and split by " " 
             }
 
             return result;
         }
+        #endregion
+
+        /// <summary>
+        /// Get all physical RAM
+        /// </summary>
+        /// <returns></returns>
+        public long GetTotalRAM()
+        {
+            string freeMemory;
+            if (currentPlatform == PlatformID.Win32NT)
+            {
+                freeMemory = "systeminfo | Select-String 'Total Physical Memory:'".PowerShell()
+                    .Replace("Total Physical Memory:", "").Replace("MB", "").Replace(",", "");
+            }
+            else
+                freeMemory = "free -m | grep Mem".Bash().Replace("Mem:", "").Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
+
+            if (long.TryParse(freeMemory, out long result))
+                return result;
+            return -1;
+        }
+
+        /// <summary>
+        /// Get available RAM in MB
+        /// </summary>
+        public long GetFreeRAM()
+        {
+            string freeMemory;
+            if(currentPlatform == PlatformID.Win32NT)
+            {
+                freeMemory = "gwmi Win32_OperatingSystem | fl *FreePhysicalMemory*".PowerShell().Split(":")[1];
+            }
+            else
+                freeMemory = "free -m | grep Mem".Bash().Replace("Mem:", "").Split(' ', StringSplitOptions.RemoveEmptyEntries)[2];
+
+            if (long.TryParse(freeMemory, out long result))
+                return currentPlatform == PlatformID.Win32NT? result/1024 : result;
+            return -1;
+        }
+
+        /// <summary>
+        /// Get standart CPU Clock in MHz
+        /// </summary>
+        /// <returns></returns>
+        public int GetCPUClock()
+        {
+            string cpuInfo;
+            if (currentPlatform == PlatformID.Win32NT)
+            {
+                cpuInfo = "gwmi win32_Processor | fl *MaxClockSpeed* ".PowerShell();  
+            }
+            else
+                cpuInfo = "lscpu | grep 'CPU MHz'".Bash();
+
+            cpuInfo = cpuInfo.Split(':')[1];
+
+            if (int.TryParse(cpuInfo, out int result))
+                return result;
+            return -1;
+        }
+
+        public CPUArchitectures GetCPUArchitecture()
+        {
+
+
+
+            return CPUArchitectures.x86;
+        }
 
         public MachineInfo GetMachineInfo()
         {
-            throw new NotImplementedException();
+            if (machineInfo == null)
+                machineInfo = new MachineInfo();
+
+            machineInfo.AllMemory = GetTotalRAM();
+            machineInfo.AvailableMemory = GetFreeRAM();
+            machineInfo.CPUClock = GetCPUClock();
+
+            return machineInfo;
         }
     }
 }
