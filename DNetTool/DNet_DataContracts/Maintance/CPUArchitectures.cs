@@ -7,7 +7,6 @@ namespace DNet_DataContracts.Maintance
     public enum CPUArchitectures
     {
         x86, // 1x Multiplier
-        x86_64, // 1.2x Multiplier ???
-        ARM  // 0.8 Multiplier
+        x86_64 // 1.1x Multiplier 
     }
 }

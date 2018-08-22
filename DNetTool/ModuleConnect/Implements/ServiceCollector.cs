@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using DNet_DataContracts.Maintance;
+using Microsoft.Extensions.Logging;
 using ModuleConnect.Interfaces;
+
 
 namespace ModuleConnect.Implements
 {
@@ -10,10 +12,12 @@ namespace ModuleConnect.Implements
     {
         readonly PlatformID currentPlatform;
         MachineInfo machineInfo;
+        ILogger<ServiceCollector> _logger;
 
-        public ServiceCollector()
+        public ServiceCollector(ILogger<ServiceCollector> logger)
         {
             currentPlatform = Environment.OSVersion.Platform;
+            _logger = logger;
         }
 
         #region Diagnostics function
@@ -36,6 +40,8 @@ namespace ModuleConnect.Implements
                     result += "lscpu".Bash();
                     break;
             }
+
+            _logger.LogInformation("GetFullCPUInfo: Get all CPU Info:\n" + result);
             return result;
         }
 
@@ -56,12 +62,13 @@ namespace ModuleConnect.Implements
                 result += "free -m | grep Mem".Bash(); //total/used/free memory, parse "Mem:" and split by " " 
             }
 
+            _logger.LogInformation("GetFullRAMInfo: Get all RAM Info:\n" + result);
             return result;
         }
         #endregion
 
         /// <summary>
-        /// Get all physical RAM
+        /// Get all physical RAM in MB
         /// </summary>
         /// <returns></returns>
         public long GetTotalRAM()
@@ -119,10 +126,22 @@ namespace ModuleConnect.Implements
             return -1;
         }
 
+        /// <summary>
+        /// Get CPU Architecture
+        /// </summary>
+        /// <returns></returns>
         public CPUArchitectures GetCPUArchitecture()
         {
+            string cpuArchitecure;
+            if (currentPlatform == PlatformID.Win32NT)
+            {
+                cpuArchitecure = "$ENV:Processor_Architecture".PowerShell();
+            }
+            else
+                cpuArchitecure = "lscpu | grep Architecture".Bash();
 
-
+            if (cpuArchitecure == "AMD64" || cpuArchitecure == "x86_64")
+                return CPUArchitectures.x86_64;
 
             return CPUArchitectures.x86;
         }
@@ -134,7 +153,12 @@ namespace ModuleConnect.Implements
 
             machineInfo.AllMemory = GetTotalRAM();
             machineInfo.AvailableMemory = GetFreeRAM();
+
             machineInfo.CPUClock = GetCPUClock();
+            machineInfo.CPUCores = Environment.ProcessorCount;
+            machineInfo.CPUArchitecture = GetCPUArchitecture();
+
+            machineInfo.CalculatePerformancePoints();
 
             return machineInfo;
         }

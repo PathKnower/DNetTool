@@ -23,6 +23,11 @@ namespace DNet_DataContracts.Maintance
         public CPUArchitectures CPUArchitecture { get; set; }
 
         /// <summary>
+        /// Full cpu power
+        /// </summary>
+        public long CPUPower { get; set; }
+
+        /// <summary>
         /// Represent all memory in machine in MB
         /// </summary>
         public long AllMemory { get; set; }
@@ -32,11 +37,41 @@ namespace DNet_DataContracts.Maintance
         /// </summary>
         public long AvailableMemory { get; set; }
 
+
         /// <summary>
         /// Performance points of current machine
         /// </summary>
-        public int PerformancePoint { get; set; }
-        
-        //Hard drive: Maybe, in future 
+        public long PerformancePoint { get; set; }
+
+
+
+        /// <summary>
+        /// Calculate CPU Power
+        /// </summary>
+        public void CalculateCPUPower()
+        {
+            long res = CPUClock * CPUCores;
+            if (CPUArchitecture == CPUArchitectures.x86_64)
+                res = (long)(res * 1.1);
+
+            CPUPower = res;
+        }
+
+        /// <summary>
+        /// Calculate Performance Points
+        /// </summary>
+        public void CalculatePerformancePoints()
+        {
+            CalculateCPUPower();
+
+            double coefficent = CPUPower / AllMemory;
+            if (coefficent < 1 && CPUPower < 8000)
+            {
+                coefficent = CPUPower % AllMemory;
+                PerformancePoint = CPUPower + (long)(AllMemory * coefficent);
+            }
+            else
+                PerformancePoint = CPUPower + AllMemory;
+        }
     }
 }

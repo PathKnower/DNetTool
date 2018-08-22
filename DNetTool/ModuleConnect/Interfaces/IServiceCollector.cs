@@ -12,8 +12,14 @@ namespace ModuleConnect.Interfaces
 
         string GetFullRAMInfo();
 
+        long GetTotalRAM();
+
+        long GetFreeRAM();
+
+        int GetCPUClock();
+
+        CPUArchitectures GetCPUArchitecture();
+
         MachineInfo GetMachineInfo();
-
-
     }
 }
