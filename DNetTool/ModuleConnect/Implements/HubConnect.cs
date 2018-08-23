@@ -2,8 +2,10 @@
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
 using ModuleConnect.Interfaces;
-using NLog;
+
+using DNet_DataContracts.Maintance;
 
 namespace ModuleConnect.Implements
 {
@@ -13,16 +15,21 @@ namespace ModuleConnect.Implements
         public event ConnectionHandle SuccessfullRegister;
         public event ConnectionHandle FailedRegister;
 
-        private readonly Logger logger;
-        private readonly string _connectUri;
+        ILogger<HubConnect> _logger;
+        private string _connectUri;
+        private IServiceCollector _serviceCollector;
 
         HubConnection hubConnection;
 
-        public HubConnect(string connectUri)
+        public HubConnect(ILogger<HubConnect> logger, IServiceCollector serviceCollector)
         {
-            logger = LogManager.GetCurrentClassLogger();
+            _logger = logger;
+            _serviceCollector = serviceCollector;
+        }
 
-            _connectUri = connectUri;
+        void Initialize(string connectionUri)
+        {
+            _connectUri = connectionUri;
 
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(_connectUri)
@@ -42,7 +49,7 @@ namespace ModuleConnect.Implements
             }
             catch(Exception e)
             {
-                logger.Error(e, $"Error occure the refister module. Module type = {moduleType}");
+                _logger.LogError(e, $"Connect: Error occure the register module. Module type = {moduleType}");
             }
         }
 
@@ -63,9 +70,38 @@ namespace ModuleConnect.Implements
 
         #region Inteface Implementation
 
-        public async Task Connect(string moduleType)
+        public async Task Connect(string connectionUri, string moduleType)
         {
+            if (hubConnection == null)
+                Initialize(connectionUri);
+
             await Register(moduleType);
+        }
+
+        public async Task CollectMachineInfo()
+        {
+            try
+            {
+                MachineInfo machineInfo = await _serviceCollector.GetMachineInfo();
+                await hubConnection.InvokeAsync("RecieveMachineInfo", machineInfo);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e, "Connect: Error occure collect machine info.");
+            }
+        }
+
+
+        public async Task UpdateMachineLoad()
+        {
+            try
+            {
+
+            }
+            catch(Exception e)
+            {
+
+            }
         }
 
         #endregion

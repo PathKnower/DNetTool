@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using DNet_DataContracts.Maintance;
 using Microsoft.Extensions.Logging;
 using ModuleConnect.Interfaces;
@@ -146,7 +147,12 @@ namespace ModuleConnect.Implements
             return CPUArchitectures.x86;
         }
 
-        public MachineInfo GetMachineInfo()
+
+        /// <summary>
+        /// Collect all necessary information about machine and calculate Performance Points
+        /// </summary>
+        /// <returns></returns>
+        public async Task<MachineInfo> GetMachineInfo()
         {
             if (machineInfo == null)
                 machineInfo = new MachineInfo();

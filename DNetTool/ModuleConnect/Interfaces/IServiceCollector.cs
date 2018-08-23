@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Threading.Tasks;
 using DNet_DataContracts.Maintance;
 
 namespace ModuleConnect.Interfaces
@@ -20,6 +20,6 @@ namespace ModuleConnect.Interfaces
 
         CPUArchitectures GetCPUArchitecture();
 
-        MachineInfo GetMachineInfo();
+        Task<MachineInfo> GetMachineInfo();
     }
 }
