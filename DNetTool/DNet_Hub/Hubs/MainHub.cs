@@ -4,16 +4,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using DNet_DataContracts.Maintance;
+using DNet_Hub.Implements;
+
 namespace DNet_Hub.Hubs
 {
     public class MainHub : Hub
     {
-        //Store module connection id (key) and module group (value)
+        public delegate void MachineHardwareEvent(string id, MachineInfo info);
+        public event MachineHardwareEvent RecievedMachineInfo;
+        public event MachineHardwareEvent UpdatedMachineInfo;
+
+
+        /// <summary>
+        /// Store module connection id (key) and module group (value)
+        /// </summary>
         private Dictionary<string, string> UserGroup { get; set; } 
+        
+        IList<ModuleProcessing> Modules { get; set; }
 
         public MainHub()
         {
             UserGroup = new Dictionary<string, string>();
+            Modules = new List<ModuleProcessing>();
         }
 
         #region Register Logic
@@ -23,10 +36,11 @@ namespace DNet_Hub.Hubs
         /// </summary>
         /// <param name="groupName">Module group</param>
         /// <returns></returns>
-        public async Task RegisterModule(string groupName)
+        public async Task RegisterModule(ModuleTypes moduleType)
         {
-            await this.Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            UserGroup.Add(Context.ConnectionId, groupName);
+            await this.Groups.AddToGroupAsync(Context.ConnectionId, moduleType.ToString());
+            UserGroup.Add(Context.ConnectionId, moduleType.ToString());
+            Modules.Add(new ModuleProcessing(Context.ConnectionId, this)); //add new module to maintance module info
 
             await this.Clients.Caller.SendAsync("OnRegister", "Ok"); //Callback that successfull register module
         }
@@ -37,8 +51,13 @@ namespace DNet_Hub.Hubs
         /// <returns></returns>
         public async Task UnregisterModule()
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, UserGroup[Context.ConnectionId]);
-            UserGroup.Remove(Context.ConnectionId);
+            string connectionId = Context.ConnectionId;
+            await Groups.RemoveFromGroupAsync(connectionId, UserGroup[connectionId]);
+            UserGroup.Remove(connectionId);
+
+            var module = Modules.FirstOrDefault(x => x.Id == connectionId);
+            if(module != null)
+                Modules.Remove(module);
         }
 
         /// <summary>
@@ -54,9 +73,14 @@ namespace DNet_Hub.Hubs
 
         #endregion
 
-        public async Task ModuleActivity()
+        public async Task RecieveMachineInfo(MachineInfo moduleInfo)
         {
+            RecievedMachineInfo?.Invoke(Context.ConnectionId, moduleInfo);
+        }
 
+        public async Task ModuleActivity(MachineInfo moduleInfo)
+        {
+            UpdatedMachineInfo?.Invoke(Context.ConnectionId, moduleInfo);
         }
     }
 }

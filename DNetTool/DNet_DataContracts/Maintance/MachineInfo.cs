@@ -43,7 +43,7 @@ namespace DNet_DataContracts.Maintance
         /// </summary>
         public long PerformancePoint { get; set; }
 
-
+        //TODO: Module load calculate
 
         /// <summary>
         /// Calculate CPU Power

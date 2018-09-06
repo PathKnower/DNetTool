@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
+using DNet_DataContracts.Maintance;
+
 namespace ModuleConnect.Interfaces
 {
     interface IConnect
@@ -12,14 +14,18 @@ namespace ModuleConnect.Interfaces
         /// </summary>
         /// <param name="moduleType"></param>
         /// <returns></returns>
-        Task Connect(string connectionUri, string moduleType);
+        Task Connect(string connectionUri, ModuleTypes moduleType);
 
         /// <summary>
-        /// 
+        /// Collect full machine info, calculate Processing points
         /// </summary>
         /// <returns></returns>
         Task CollectMachineInfo();
-
+        
+        /// <summary>
+        /// Collect actual machine load information
+        /// </summary>
+        /// <returns></returns>
         Task UpdateMachineLoad();
     }
 }

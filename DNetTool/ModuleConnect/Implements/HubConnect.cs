@@ -37,11 +37,16 @@ namespace ModuleConnect.Implements
 
             hubConnection.On<string>("OnRegister", OnRegister);
 
+            hubConnection.On("CollectMachineInfo", GetMachineInfo);
+            hubConnection.On("UpdateMachineLoad", GetMachineLoad);
+
             hubConnection.StartAsync();
         }
 
+
+
         #region RegisterModule logic
-        public async Task Register(string moduleType)
+        public async Task Register(ModuleTypes moduleType)
         {
             try
             {
@@ -66,11 +71,20 @@ namespace ModuleConnect.Implements
                 return;
             }
         }
+
+        #endregion
+
+        #region Server handlers
+
+        private async void GetMachineInfo() => await CollectMachineInfo();
+
+        private async void GetMachineLoad() => await UpdateMachineLoad();
+
         #endregion
 
         #region Inteface Implementation
 
-        public async Task Connect(string connectionUri, string moduleType)
+        public async Task Connect(string connectionUri, ModuleTypes moduleType)
         {
             if (hubConnection == null)
                 Initialize(connectionUri);
@@ -96,7 +110,7 @@ namespace ModuleConnect.Implements
         {
             try
             {
-
+                //TODO: work with this
             }
             catch(Exception e)
             {
