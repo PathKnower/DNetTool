@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DNet_DataContracts.Maintance;
+using DNet_DataContracts;
+
 using DNet_Hub.Implements;
 
 namespace DNet_Hub.Hubs

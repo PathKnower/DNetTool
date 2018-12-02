@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DNet_DataContracts.Maintance
+using DNet_DataContracts.Maintance;
+
+namespace DNet_DataContracts
 {
+    /// <summary>
+    /// Represent a module types
+    /// </summary>
     public enum ModuleTypes
     {
         /// <summary>
@@ -35,5 +40,31 @@ namespace DNet_DataContracts.Maintance
         /// Add-on modules, Coming soon
         /// </summary>
         Add_on
+    }
+
+    /// <summary>
+    /// Represent a module which host's on machine
+    /// </summary>
+    public class Module
+    {
+        /// <summary>
+        /// Unique module ID
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Module's host machine information
+        /// </summary>
+        public MachineInfo ModuleHostInfo { get; set; }
+
+        /// <summary>
+        /// Module group
+        /// </summary>
+        public string Group { get; set; }
+        
+        /// <summary>
+        /// Type of the current module
+        /// </summary>
+        public ModuleTypes ModuleType { get; set; }
     }
 }
