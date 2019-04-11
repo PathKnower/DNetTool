@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using ModuleConnect.Interfaces;
 
+using DNet_DataContracts;
 using DNet_DataContracts.Maintance;
 
 namespace ModuleConnect.Implements
