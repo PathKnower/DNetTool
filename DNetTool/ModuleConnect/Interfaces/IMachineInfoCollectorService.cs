@@ -6,7 +6,7 @@ using DNet_DataContracts.Maintance;
 
 namespace ModuleConnect.Interfaces
 {
-    public interface IServiceCollector
+    public interface IMachineInfoCollectorService
     {
         string GetFullCPUInfo();
 

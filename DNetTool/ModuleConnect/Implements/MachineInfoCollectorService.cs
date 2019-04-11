@@ -9,13 +9,13 @@ using ModuleConnect.Interfaces;
 
 namespace ModuleConnect.Implements
 {
-    public class ServiceCollector : IServiceCollector
+    public class MachineInfoCollectorService : IMachineInfoCollectorService
     {
         readonly PlatformID currentPlatform;
         MachineInfo machineInfo;
-        ILogger<ServiceCollector> _logger;
+        ILogger<MachineInfoCollectorService> _logger;
 
-        public ServiceCollector(ILogger<ServiceCollector> logger)
+        public MachineInfoCollectorService(ILogger<MachineInfoCollectorService> logger)
         {
             currentPlatform = Environment.OSVersion.Platform;
             _logger = logger;

@@ -13,11 +13,7 @@ namespace DNet_DataContracts.Processing
 
 
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Threading.Task Action { get; set; }
+        public TaskType Type;
 
         /// <summary>
         /// Payload of the action. 
@@ -25,11 +21,6 @@ namespace DNet_DataContracts.Processing
         public object Payload { get; set; }
 
         public object Result { get; set; }
-
-        void Some()
-        {
-
-        }
-
+        
     }
 }

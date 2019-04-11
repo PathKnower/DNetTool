@@ -18,11 +18,11 @@ namespace ModuleConnect.Implements
 
         ILogger<HubConnect> _logger;
         private string _connectUri;
-        private IServiceCollector _serviceCollector;
+        private IMachineInfoCollectorService _serviceCollector;
 
         HubConnection hubConnection;
 
-        public HubConnect(ILogger<HubConnect> logger, IServiceCollector serviceCollector)
+        public HubConnect(ILogger<HubConnect> logger, IMachineInfoCollectorService serviceCollector)
         {
             _logger = logger;
             _serviceCollector = serviceCollector;
