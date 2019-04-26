@@ -27,6 +27,11 @@ namespace DNet_DataContracts
         Controller,
 
         /// <summary>
+        /// Manager module, load balancer itself
+        /// </summary>
+        Manager,
+
+        /// <summary>
         /// Processing module, solve all calculation tasks.
         /// </summary>
         Processing,
@@ -53,9 +58,19 @@ namespace DNet_DataContracts
         public string Id { get; set; }
 
         /// <summary>
+        /// Remote Ip Adrress of module
+        /// </summary>
+        public string RemoteIpAdress { get; set; }
+
+        /// <summary>
+        /// Local Ip Adrress of module
+        /// </summary>
+        public string LocalIpAdress { get; set; }
+
+        /// <summary>
         /// Module's host machine information
         /// </summary>
-        public MachineInfo ModuleHostInfo { get; set; }
+        public MachineSpecifications ModuleHostInfo { get; set; }
 
         /// <summary>
         /// Module group

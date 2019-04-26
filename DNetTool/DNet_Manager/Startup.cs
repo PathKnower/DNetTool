@@ -36,7 +36,7 @@ namespace DNet_Manager
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddSingleton(provider => Configuration); //Add config to DI
-            services.AddScoped<IConnect, HubConnect>(); //Register connection impl
+            services.AddSingleton<IConnect, HubConnect>(); //One connection instances for all 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

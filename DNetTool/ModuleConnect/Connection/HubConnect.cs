@@ -13,11 +13,9 @@ namespace DNet_Communication.Connection
 {
     public class HubConnect : IConnect
     {
-        public delegate void ConnectionHandle(string uri);
-        public event ConnectionHandle SuccessfullRegister;
-        public event ConnectionHandle FailedRegister;
+        
 
-        ILogger<HubConnect> _logger;
+        private readonly ILogger<HubConnect> _logger;
         private string _connectUri;
         private IMachineInfoCollectorService _serviceCollector;
 
@@ -37,6 +35,8 @@ namespace DNet_Communication.Connection
                 .WithUrl(_connectUri)
                 .Build();
 
+            hubConnection.Closed += HubConnection_Closed;
+
             hubConnection.On<string>("OnRegister", OnRegister);
 
             hubConnection.On("CollectMachineInfo", GetMachineInfo);
@@ -45,7 +45,10 @@ namespace DNet_Communication.Connection
             hubConnection.StartAsync();
         }
 
-
+        private async Task HubConnection_Closed(Exception arg)
+        {
+            Disconnect?.Invoke(_connectUri);
+        }
 
         #region RegisterModule logic
         public async Task Register(ModuleTypes moduleType)
@@ -69,7 +72,7 @@ namespace DNet_Communication.Connection
             }
             else
             {
-                FailedRegister(_connectUri);
+                //FailedRegister(_connectUri); //Work on this cases
                 return;
             }
         }
@@ -86,6 +89,9 @@ namespace DNet_Communication.Connection
 
         #region Inteface Implementation
 
+        public event ConnectionHandle SuccessfullRegister;
+        public event ConnectionHandle ConnectionRestored;
+        public event ConnectionHandle Disconnect;
 
         public bool IsConnected { get { return hubConnection.State == HubConnectionState.Connected;} }
 
@@ -104,7 +110,7 @@ namespace DNet_Communication.Connection
         {
             try
             {
-                MachineInfo machineInfo = await _serviceCollector.GetMachineInfo();
+                MachineSpecifications machineInfo = await _serviceCollector.GetMachineInfo();
                 await hubConnection.InvokeAsync("RecieveMachineInfo", machineInfo);
             }
             catch(Exception e)

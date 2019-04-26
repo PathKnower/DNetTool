@@ -11,7 +11,7 @@ namespace DNet_Communication.Maintance
     public class MachineInfoCollectorService : IMachineInfoCollectorService
     {
         readonly PlatformID currentPlatform;
-        MachineInfo machineInfo;
+        MachineSpecifications machineInfo;
         ILogger<MachineInfoCollectorService> _logger;
 
         public MachineInfoCollectorService(ILogger<MachineInfoCollectorService> logger)
@@ -151,10 +151,10 @@ namespace DNet_Communication.Maintance
         /// Collect all necessary information about machine and calculate Performance Points
         /// </summary>
         /// <returns></returns>
-        public async Task<MachineInfo> GetMachineInfo()
+        public async Task<MachineSpecifications> GetMachineInfo()
         {
             if (machineInfo == null)
-                machineInfo = new MachineInfo();
+                machineInfo = new MachineSpecifications();
 
             machineInfo.AllMemory = GetTotalRAM();
             machineInfo.AvailableMemory = GetFreeRAM();

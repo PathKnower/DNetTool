@@ -5,16 +5,19 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 using DNet_Communication.Connection;
-using Microsoft.Extensions.Logging;
+
+using DNet_DataContracts;
 
 namespace DNet_Manager.Hubs
 {
     public class LobbyHub : Hub
     {
-        public delegate void ConnectionEvent();
+        public delegate void ConnectionEvent(ModuleTypes targetModule);
         public event ConnectionEvent ConnectionInitialized;
+        public event ConnectionEvent DisconnectFromModule;
 
         private readonly IConnect _connectionInstance;
         private readonly ILogger<LobbyHub> _logger;
@@ -26,20 +29,32 @@ namespace DNet_Manager.Hubs
             _connectionInstance = connectionInstance;
             _logger = logger;
 
+            _connectionInstance.Disconnect += _connectionInstance_Disconnect;
+            _connectionInstance.SuccessfullRegister += _connectionInstance_SuccessfullRegister;
+
             ConnectToHub().RunSynchronously();
+        }
+
+        private void _connectionInstance_SuccessfullRegister(string uri)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void _connectionInstance_Disconnect(string uri)
+        {
+            throw new NotImplementedException();
         }
 
         private async Task ConnectToHub()
         {
-            var connectTask = _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"], DNet_DataContracts.ModuleTypes.Controller);
-            if (!await connectTask)
+            if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"], ModuleTypes.Manager))
             {
-                connectTask = _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"], DNet_DataContracts.ModuleTypes.Controller);
-                if (!await connectTask)
-                {
-                    _logger.LogCritical("Could not connect to any hub, looking for available hubs in network"); //TODO: Make this feature
-                }
+                
+            } else if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"], ModuleTypes.Manager))
+            {
+
             }
+            _logger.LogCritical("Could not connect to any hub, looking for available hubs in network"); //TODO: Make this feature
         }
     }
 }

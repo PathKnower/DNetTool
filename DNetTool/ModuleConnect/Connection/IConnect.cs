@@ -8,8 +8,14 @@ using DNet_DataContracts.Maintance;
 
 namespace DNet_Communication.Connection
 {
+    public delegate void ConnectionHandle(string uri);
+
     public interface IConnect
     {
+        event ConnectionHandle SuccessfullRegister;
+        event ConnectionHandle ConnectionRestored;
+        event ConnectionHandle Disconnect;
+
         bool IsConnected { get; }
 
         /// <summary>

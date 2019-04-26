@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DNet_DataContracts.Maintance
 {
-    public class MachineInfo
+    public class MachineSpecifications
     {
         /// <summary>
         /// Represent CPU Clock in MHz

@@ -20,6 +20,6 @@ namespace DNet_Communication.Maintance
 
         CPUArchitectures GetCPUArchitecture();
 
-        Task<MachineInfo> GetMachineInfo();
+        Task<MachineSpecifications> GetMachineInfo();
     }
 }

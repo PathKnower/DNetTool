@@ -10,33 +10,41 @@ namespace DNet_Hub.Implements
 {
     public class ModuleInfo
     {
-        public readonly string Id;
+        public readonly string ConnectionId;
 
-        public MachineInfo LocalMachineInfo { get; set; }
+        public string RemoteUri { get; set; }
+        public string LocalUri { get; set; }
+
+        public MachineSpecifications TargetMachineSpecifications { get; set; }
+
+        public ModuleInfo()
+        {
+
+        }
 
         public ModuleInfo(string id, MainHub parentHub)
         {
-            Id = id;
+            ConnectionId = id;
             parentHub.RecievedMachineInfo += ParentHub_RecievedMachineInfo;
             parentHub.UpdatedMachineInfo += ParentHub_UpdatedMachineInfo;
         }
 
 
-        private void ParentHub_UpdatedMachineInfo(string id, MachineInfo info)
+        private void ParentHub_UpdatedMachineInfo(string id, MachineSpecifications info)
         {
-            if (id != Id)
+            if (id != ConnectionId)
                 return;
             
             //TODO: Rework this
-            LocalMachineInfo = info;
+            TargetMachineSpecifications = info;
         }
 
-        private void ParentHub_RecievedMachineInfo(string id, MachineInfo info)
+        private void ParentHub_RecievedMachineInfo(string id, MachineSpecifications info)
         {
-            if (id != Id)
+            if (id != ConnectionId)
                 return;
 
-            LocalMachineInfo = info;
+            TargetMachineSpecifications = info;
         }
     }
 }
