@@ -11,6 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+
+using ModuleConnect.Implements;
+using ModuleConnect.Interfaces;
+
+
 namespace DNet_Processing
 {
     public class Startup
@@ -25,7 +30,11 @@ namespace DNet_Processing
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+
+            services.AddSignalR();
+
+            services.AddScoped<IConnect, HubConnect>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

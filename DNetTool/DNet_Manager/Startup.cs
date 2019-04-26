@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
+
+using ModuleConnect.Implements;
+using ModuleConnect.Interfaces;
+
 namespace DNet_Manager
 {
     public class Startup
@@ -26,6 +30,8 @@ namespace DNet_Manager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddScoped<IConnect, HubConnect>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

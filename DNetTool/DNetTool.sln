@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleConnect", "ModuleConnect\ModuleConnect.csproj", "{600A9E5E-4FA7-4DE7-980F-F0F4FD156B6F}"
 EndProject
@@ -30,7 +30,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Manager.Tests", "DNet_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Processing.Tests", "DNet_Processing.Tests\DNet_Processing.Tests.csproj", "{6A99ED77-D29D-40B3-96BA-465E2E978480}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNet_DataContracts", "DNet_DataContracts\DNet_DataContracts.csproj", "{F71EF883-B1F8-418D-A764-4BFB4297FD26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_DataContracts", "DNet_DataContracts\DNet_DataContracts.csproj", "{F71EF883-B1F8-418D-A764-4BFB4297FD26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DockerFiles", "DockerFiles", "{A54C95D0-CEA9-4B41-AAC9-7930FC69AABF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,6 +94,7 @@ Global
 		{9AD8A0EC-346C-43BE-9A58-621867ABDF69} = {D17FB79C-8281-447D-9BA1-B4E483F1B15A}
 		{0F3D88A7-7913-4821-B1AC-800203512F4E} = {D17FB79C-8281-447D-9BA1-B4E483F1B15A}
 		{6A99ED77-D29D-40B3-96BA-465E2E978480} = {D17FB79C-8281-447D-9BA1-B4E483F1B15A}
+		{A54C95D0-CEA9-4B41-AAC9-7930FC69AABF} = {BEBA127B-F488-4D68-8070-886CE0D9356F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FD486BB-79C0-4756-B7AA-47F957DFD129}

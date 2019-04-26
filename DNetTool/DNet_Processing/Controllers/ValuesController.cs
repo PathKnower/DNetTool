@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ModuleConnect.Interfaces;
 
 namespace DNet_Processing.Controllers
 {
@@ -10,12 +11,29 @@ namespace DNet_Processing.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        IConnect _hubConnect;
+
+        public ValuesController(IConnect hubConnection)
         {
-            return new string[] { "value1", "value2" };
+            _hubConnect = hubConnection;
+
+            _hubConnect.Connect("http://localhost:5000/mainhub", DNet_DataContracts.ModuleTypes.Processing);
         }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            
+
+            return Ok();
+        }
+
+        // GET api/values
+        //[HttpGet]
+        //public ActionResult<IEnumerable<string>> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
 
         // GET api/values/5
         [HttpGet("{id}")]

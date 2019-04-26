@@ -11,9 +11,8 @@ namespace DNet_DataContracts.Processing
         public delegate void TaskEvents();
         public event TaskEvents TaskComlete;
 
-        
 
-        public TaskType Type;
+        public TaskType Type { get; set; }
 
         public Threading.Task Action { get; set; }
 

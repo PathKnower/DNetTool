@@ -8,7 +8,7 @@ using DNet_DataContracts.Maintance;
 
 namespace ModuleConnect.Interfaces
 {
-    interface IConnect
+    public interface IConnect
     {
         /// <summary>
         /// Connect to the Managed module
