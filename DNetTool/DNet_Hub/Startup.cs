@@ -16,9 +16,13 @@ namespace DNet_Hub
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        IHostingEnvironment _env;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+
+            _env = environment;
         }
 
         public IConfiguration Configuration { get; }
@@ -26,9 +30,9 @@ namespace DNet_Hub
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
-            services.AddSignalR();
+            services.AddSignalR(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,9 +46,10 @@ namespace DNet_Hub
             {
                 app.UseHsts();
             }
+
             app.UseSignalR(config =>
             {
-                config.MapHub<MainHub>("/mainhub");
+                config.MapHub<MainHub>("/mainhub"); //registering this as main hub
             });
 
             //app.UseHttpsRedirection();

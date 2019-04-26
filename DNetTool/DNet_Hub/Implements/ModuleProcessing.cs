@@ -8,13 +8,13 @@ using DNet_DataContracts.Maintance;
 
 namespace DNet_Hub.Implements
 {
-    public class ModuleProcessing
+    public class ModuleInfo
     {
         public readonly string Id;
 
         public MachineInfo LocalMachineInfo { get; set; }
 
-        public ModuleProcessing(string id, MainHub parentHub)
+        public ModuleInfo(string id, MainHub parentHub)
         {
             Id = id;
             parentHub.RecievedMachineInfo += ParentHub_RecievedMachineInfo;

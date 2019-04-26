@@ -86,12 +86,18 @@ namespace DNet_Communication.Connection
 
         #region Inteface Implementation
 
-        public async Task Connect(string connectionUri, ModuleTypes moduleType)
+
+        public bool IsConnected { get { return hubConnection.State == HubConnectionState.Connected;} }
+
+
+        public async Task<bool> Connect(string connectionUri, ModuleTypes moduleType)
         {
             if (hubConnection == null)
                 Initialize(connectionUri);
 
             await Register(moduleType);
+
+            return true;
         }
 
         public async Task CollectMachineInfo()

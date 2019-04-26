@@ -10,12 +10,14 @@ namespace DNet_Communication.Connection
 {
     public interface IConnect
     {
+        bool IsConnected { get; }
+
         /// <summary>
         /// Connect to the module 
         /// </summary>
         /// <param name="moduleType"></param>
         /// <returns></returns>
-        Task Connect(string connectionUri, ModuleTypes moduleType);
+        Task<bool> Connect(string connectionUri, ModuleTypes moduleType);
 
         /// <summary>
         /// Collect full machine info, calculate Processing points

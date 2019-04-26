@@ -23,12 +23,12 @@ namespace DNet_Hub.Hubs
         /// </summary>
         private Dictionary<string, string> UserGroup { get; set; } 
         
-        IList<ModuleProcessing> Modules { get; set; }
+        IList<ModuleInfo> Modules { get; set; }
 
         public MainHub()
         {
             UserGroup = new Dictionary<string, string>();
-            Modules = new List<ModuleProcessing>();
+            Modules = new List<ModuleInfo>();
         }
 
         #region Register Logic
@@ -42,7 +42,7 @@ namespace DNet_Hub.Hubs
         {
             await this.Groups.AddToGroupAsync(Context.ConnectionId, moduleType.ToString());
             UserGroup.Add(Context.ConnectionId, moduleType.ToString());
-            Modules.Add(new ModuleProcessing(Context.ConnectionId, this)); //add new module to maintance module info
+            Modules.Add(new ModuleInfo(Context.ConnectionId, this)); //add new module to maintance module info
 
             await this.Clients.Caller.SendAsync("OnRegister", "Ok"); //Callback that successfull register module
         }
