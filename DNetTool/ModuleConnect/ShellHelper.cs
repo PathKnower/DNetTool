@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace ModuleConnect
+namespace DNet_Communication
 {
     public static class ShellHelper
     {

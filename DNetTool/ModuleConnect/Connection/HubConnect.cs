@@ -3,12 +3,12 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
-using ModuleConnect.Interfaces;
 
 using DNet_DataContracts;
 using DNet_DataContracts.Maintance;
+using DNet_Communication.Maintance;
 
-namespace ModuleConnect.Implements
+namespace DNet_Communication.Connection
 {
     public class HubConnect : IConnect
     {

@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DNet_DataContracts.Maintance;
 
-namespace ModuleConnect.Interfaces
+namespace DNet_Communication.Maintance
 {
     public interface IMachineInfoCollectorService
     {

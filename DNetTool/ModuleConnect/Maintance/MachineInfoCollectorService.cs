@@ -4,10 +4,9 @@ using System.Text;
 using System.Threading.Tasks;
 using DNet_DataContracts.Maintance;
 using Microsoft.Extensions.Logging;
-using ModuleConnect.Interfaces;
 
 
-namespace ModuleConnect.Implements
+namespace DNet_Communication.Maintance
 {
     public class MachineInfoCollectorService : IMachineInfoCollectorService
     {

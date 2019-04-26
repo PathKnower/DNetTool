@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleConnect", "ModuleConnect\ModuleConnect.csproj", "{600A9E5E-4FA7-4DE7-980F-F0F4FD156B6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Communication", "ModuleConnect\DNet_Communication.csproj", "{600A9E5E-4FA7-4DE7-980F-F0F4FD156B6F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DNet_Controllers", "DNet_Controllers\DNet_Controllers.csproj", "{74AFB02F-DCA6-4356-AE50-216E66BDF19E}"
 EndProject

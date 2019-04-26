@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ModuleConnect\ModuleConnect.csproj" />
+    <ProjectReference Include="..\ModuleConnect\DNet_Communication.csproj" />
   </ItemGroup>
 
 </Project>

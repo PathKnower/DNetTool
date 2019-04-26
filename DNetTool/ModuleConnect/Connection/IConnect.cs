@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DNet_DataContracts;
 using DNet_DataContracts.Maintance;
 
-namespace ModuleConnect.Interfaces
+namespace DNet_Communication.Connection
 {
     public interface IConnect
     {
