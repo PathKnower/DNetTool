@@ -11,7 +11,7 @@ namespace DNet_Communication.Connection
     public interface IConnect
     {
         /// <summary>
-        /// Connect to the Managed module
+        /// Connect to the module 
         /// </summary>
         /// <param name="moduleType"></param>
         /// <returns></returns>
