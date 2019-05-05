@@ -58,6 +58,11 @@ namespace DNet_DataContracts
         public string Id { get; set; }
 
         /// <summary>
+        /// Module connection ID in scope of current session
+        /// </summary>
+        public string ConnectionID { get; set; }
+
+        /// <summary>
         /// Remote Ip Adrress of module
         /// </summary>
         public string RemoteIpAdress { get; set; }
@@ -70,7 +75,14 @@ namespace DNet_DataContracts
         /// <summary>
         /// Module's host machine information
         /// </summary>
-        public MachineSpecifications ModuleHostInfo { get; set; }
+        public MachineSpecifications ModulesHostSpecs { get; set; }
+
+        ///// <summary>
+        ///// Available hubs (basicly here is only one hub, 
+        ///// multi-hub support is coming)
+        ///// </summary>
+        //public List<MachineSpecifications> Hubs { get; set; } 
+        //    = new List<MachineSpecifications>(); //instant initialize
 
         /// <summary>
         /// Module group
@@ -81,5 +93,38 @@ namespace DNet_DataContracts
         /// Type of the current module
         /// </summary>
         public ModuleTypes ModuleType { get; set; }
+
+        #region Ctor's
+
+        public Module()
+        { }
+
+        /// <summary>
+        /// Ctor's which sets id
+        /// </summary>
+        /// <param name="id">Connection Id</param>
+        public Module(string id)
+        {
+            ConnectionID = id;
+        }
+
+        ///// <summary>
+        ///// Ctor's which sets id and connection parent
+        ///// </summary>
+        ///// <param name="id">Connection Id</param>
+        ///// <param name="connectionParent">Usually - Hub</param>
+        //public Module(string id, MachineSpecifications connectionParent)
+        //{
+        //    ConnectionID = id;
+        //    Hubs.Add(connectionParent);
+        //}
+
+        #endregion
+
+        #region Events 
+
+        //TODO:
+
+        #endregion
     }
 }

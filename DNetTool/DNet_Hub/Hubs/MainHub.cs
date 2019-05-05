@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 using DNet_DataContracts.Maintance;
 using DNet_DataContracts;
 
-using DNet_Hub.Implements;
+using DNet_Hub.Communication;
 
 namespace DNet_Hub.Hubs
 {
     public class MainHub : Hub
     {
         public delegate void MachineHardwareEvent(string id, MachineSpecifications info);
-        public event MachineHardwareEvent RecievedMachineInfo;
         public event MachineHardwareEvent UpdatedMachineInfo;
 
 
@@ -23,12 +22,12 @@ namespace DNet_Hub.Hubs
         /// </summary>
         private Dictionary<string, string> UserGroup { get; set; } 
         
-        IList<Module> Modules { get; set; }
+        IList<ModuleHubWrapper> Modules { get; set; }
 
         public MainHub()
         {
             UserGroup = new Dictionary<string, string>();
-            Modules = new List<Module>();
+            Modules = new List<ModuleHubWrapper>();
         }
 
         #region Register Logic
@@ -40,9 +39,13 @@ namespace DNet_Hub.Hubs
         /// <returns></returns>
         public async Task RegisterModule(ModuleTypes moduleType)
         {
+            ModuleHubWrapper newModule = new ModuleHubWrapper(Context.ConnectionId, this);
+            newModule.TargedModule.ModuleType = moduleType;
+            Modules.Add(newModule); //add new module to maintance module info
+
             await this.Groups.AddToGroupAsync(Context.ConnectionId, moduleType.ToString());
             UserGroup.Add(Context.ConnectionId, moduleType.ToString());
-            Modules.Add(new Module(Context.ConnectionId, this)); //add new module to maintance module info
+
             await this.Clients.Caller.SendAsync("OnRegister", "Ok"); //Callback that successfull register module
         }
         
@@ -78,7 +81,7 @@ namespace DNet_Hub.Hubs
 
         public async Task RecieveMachineInfo(MachineSpecifications moduleInfo)
         {
-            RecievedMachineInfo?.Invoke(Context.ConnectionId, moduleInfo);
+            UpdatedMachineInfo?.Invoke(Context.ConnectionId, moduleInfo);
         }
 
         public async Task ModuleActivity(MachineSpecifications moduleInfo)
@@ -89,6 +92,8 @@ namespace DNet_Hub.Hubs
         #endregion
 
         #region Helpers
+
+        //TODO: Set IP adress to module
 
         #endregion
     }
