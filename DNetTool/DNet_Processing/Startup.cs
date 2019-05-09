@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
-
-using ModuleConnect.Implements;
-using ModuleConnect.Interfaces;
-
+using DNet_Communication.Connection;
+using DNet_Processing.Hubs;
 
 namespace DNet_Processing
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        IHostingEnvironment _env;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
+            _env = environment;
         }
 
         public IConfiguration Configuration { get; }
@@ -30,11 +24,11 @@ namespace DNet_Processing
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddSignalR();
-
-            services.AddScoped<IConnect, HubConnect>();
+            services.AddSingleton(provider => Configuration); //Add config to DI
+            services.AddScoped<IConnect, HubConnect>(); //One connection instances for all ??
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,8 +43,13 @@ namespace DNet_Processing
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<LobbyHub>("/lobby");
+            });
+
+            //app.UseHttpsRedirection();
+            //app.UseMvc();
         }
     }
 }

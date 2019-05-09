@@ -17,8 +17,19 @@ namespace DNet_Hub
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        //    WebHost.CreateDefaultBuilder(args)
+        //    .UseStartup<Startup>()
+        //    .UseUrls("http://*:39753;http://*:39853");
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
+        {
+            var builder = WebHost.CreateDefaultBuilder(args);
+
+            builder.UseStartup<Startup>();
+            builder.UseUrls("http://*:39753;http://*:39853");
+
+            return builder;
+        }
     }
 }

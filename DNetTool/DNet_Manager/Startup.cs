@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-using DNet_Manager.Hubs;
-
 using DNet_Communication.Connection;
+
+using DNet_Manager.Hubs;
 
 namespace DNet_Manager
 {
@@ -24,7 +24,6 @@ namespace DNet_Manager
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
-
             _env = environment;
         }
 
