@@ -10,13 +10,15 @@ namespace DNet_Communication.Maintance
 {
     public class MachineInfoCollectorService : IMachineInfoCollectorService
     {
-        readonly PlatformID currentPlatform;
-        MachineSpecifications machineInfo;
+        private readonly PlatformID _currentPlatform;
+        private MachineSpecifications _machineInfo;
         ILogger<MachineInfoCollectorService> _logger;
+
+        private bool _disposed;
 
         public MachineInfoCollectorService(ILogger<MachineInfoCollectorService> logger)
         {
-            currentPlatform = Environment.OSVersion.Platform;
+            _currentPlatform = Environment.OSVersion.Platform;
             _logger = logger;
         }
 
@@ -31,7 +33,7 @@ namespace DNet_Communication.Maintance
         public string GetFullCPUInfo()
         {
             string result = "";
-            switch (currentPlatform)
+            switch (_currentPlatform)
             {
                 case PlatformID.Win32NT: //Windows
                     result += "gwmi win32_Processor".PowerShell(); //get full CPU info
@@ -52,7 +54,7 @@ namespace DNet_Communication.Maintance
         public string GetFullRAMInfo()
         {
             string result = "";
-            if (currentPlatform == PlatformID.Win32NT)
+            if (_currentPlatform == PlatformID.Win32NT)
             {
                 result += "systeminfo | Select-String 'Total Physical Memory:'".PowerShell(); //all memory in mb, replace 'Total Physical Memory:' and 'MB' 
                 result += "gwmi Win32_OperatingSystem | fl *free*".PowerShell(); //FreePhysicalMemory in kb
@@ -74,7 +76,7 @@ namespace DNet_Communication.Maintance
         public long GetTotalRAM()
         {
             string freeMemory;
-            if (currentPlatform == PlatformID.Win32NT)
+            if (_currentPlatform == PlatformID.Win32NT)
             {
                 freeMemory = "systeminfo | Select-String 'Total Physical Memory:'".PowerShell()
                     .Replace("Total Physical Memory:", "").Replace("MB", "").Replace(",", "");
@@ -93,7 +95,7 @@ namespace DNet_Communication.Maintance
         public long GetFreeRAM()
         {
             string freeMemory;
-            if(currentPlatform == PlatformID.Win32NT)
+            if(_currentPlatform == PlatformID.Win32NT)
             {
                 freeMemory = "gwmi Win32_OperatingSystem | fl *FreePhysicalMemory*".PowerShell().Split(":")[1];
             }
@@ -101,7 +103,7 @@ namespace DNet_Communication.Maintance
                 freeMemory = "free -m | grep Mem".Bash().Replace("Mem:", "").Split(' ', StringSplitOptions.RemoveEmptyEntries)[2];
 
             if (long.TryParse(freeMemory, out long result))
-                return currentPlatform == PlatformID.Win32NT? result/1024 : result;
+                return _currentPlatform == PlatformID.Win32NT? result/1024 : result;
             return -1;
         }
 
@@ -112,7 +114,7 @@ namespace DNet_Communication.Maintance
         public int GetCPUClock()
         {
             string cpuInfo;
-            if (currentPlatform == PlatformID.Win32NT)
+            if (_currentPlatform == PlatformID.Win32NT)
             {
                 cpuInfo = "gwmi win32_Processor | fl *MaxClockSpeed* ".PowerShell();  
             }
@@ -133,7 +135,7 @@ namespace DNet_Communication.Maintance
         public CPUArchitectures GetCPUArchitecture()
         {
             string cpuArchitecure;
-            if (currentPlatform == PlatformID.Win32NT)
+            if (_currentPlatform == PlatformID.Win32NT)
             {
                 cpuArchitecure = "$ENV:Processor_Architecture".PowerShell();
             }
@@ -153,19 +155,37 @@ namespace DNet_Communication.Maintance
         /// <returns></returns>
         public async Task<MachineSpecifications> GetMachineInfo()
         {
-            if (machineInfo == null)
-                machineInfo = new MachineSpecifications();
+            if (_machineInfo == null)
+                _machineInfo = new MachineSpecifications();
 
-            machineInfo.AllMemory = GetTotalRAM();
-            machineInfo.AvailableMemory = GetFreeRAM();
+            _machineInfo.AllMemory = GetTotalRAM();
+            _machineInfo.AvailableMemory = GetFreeRAM();
 
-            machineInfo.CPUClock = GetCPUClock();
-            machineInfo.CPUCores = Environment.ProcessorCount;
-            machineInfo.CPUArchitecture = GetCPUArchitecture();
+            _machineInfo.CPUClock = GetCPUClock();
+            _machineInfo.CPUCores = Environment.ProcessorCount;
+            _machineInfo.CPUArchitecture = GetCPUArchitecture();
 
-            machineInfo.CalculatePerformancePoints();
+            _machineInfo.CalculatePerformancePoints();
 
-            return machineInfo;
+            return _machineInfo;
         }
+
+        #region Disposing
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            InternalDispose();
+            GC.SuppressFinalize(this);
+        }
+
+        private void InternalDispose()
+        {
+            // nothing to do
+        }
+
+        #endregion
     }
 }

@@ -10,7 +10,7 @@ namespace DNet_Communication.Connection
 {
     public delegate void ConnectionHandle(string uri);
 
-    public interface IConnect
+    public interface IConnect : IDisposable
     {
         event ConnectionHandle SuccessfullRegister;
         event ConnectionHandle ConnectionRestored;
@@ -36,5 +36,11 @@ namespace DNet_Communication.Connection
         /// </summary>
         /// <returns></returns>
         Task UpdateMachineLoad();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //Task<string[]> HubSearching(string adressPool);
     }
 }

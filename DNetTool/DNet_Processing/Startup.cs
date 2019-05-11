@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using DNet_Communication.Connection;
+using DNet_Communication.Maintance;
 using DNet_Processing.Hubs;
 
 namespace DNet_Processing
@@ -24,11 +25,12 @@ namespace DNet_Processing
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddSignalR();
             services.AddSingleton(provider => Configuration); //Add config to DI
-            services.AddScoped<IConnect, HubConnect>(); //One connection instances for all ??
+            services.AddSingleton<IMachineInfoCollectorService, MachineInfoCollectorService>();
+            services.AddSingleton<IConnect, HubConnect>(); //One connection instances for all ??
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +51,7 @@ namespace DNet_Processing
             });
 
             //app.UseHttpsRedirection();
-            //app.UseMvc();
+            app.UseMvc();
         }
     }
 }

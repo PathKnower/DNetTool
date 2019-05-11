@@ -27,7 +27,7 @@ namespace DNet_Hub
             var builder = WebHost.CreateDefaultBuilder(args);
 
             builder.UseStartup<Startup>();
-            builder.UseUrls("http://*:39753;http://*:39853");
+            builder.UseUrls("http://localhost:39286");
 
             return builder;
         }

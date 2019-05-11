@@ -8,18 +8,18 @@ using DNet_DataContracts;
 using DNet_DataContracts.Maintance;
 
 using DNet_Communication.Maintance;
+using System.Collections.Generic;
 
 namespace DNet_Communication.Connection
 {
     public class HubConnect : IConnect
     {
-        
-
         private readonly ILogger<HubConnect> _logger;
-        private string _connectUri;
+        private string _connectURI;
         private IMachineInfoCollectorService _serviceCollector;
+        private bool _disposed;
 
-        HubConnection hubConnection;
+        HubConnection _hubConnection;
 
         public HubConnect(ILogger<HubConnect> logger, IMachineInfoCollectorService serviceCollector)
         {
@@ -27,27 +27,29 @@ namespace DNet_Communication.Connection
             _serviceCollector = serviceCollector;
         }
 
-        void Initialize(string connectionUri)
+        async Task Initialize(string connectionUri)
         {
-            _connectUri = connectionUri;
+            _connectURI = connectionUri;
 
-            hubConnection = new HubConnectionBuilder()
-                .WithUrl(_connectUri)
+            CheckConnectionURI(ref _connectURI);
+
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(_connectURI)
                 .Build();
 
-            hubConnection.Closed += HubConnection_Closed;
+            _hubConnection.Closed += HubConnection_Closed;
 
-            hubConnection.On<string>("OnRegister", OnRegister);
+            _hubConnection.On<string>("OnRegister", OnRegister);
 
-            hubConnection.On("CollectMachineInfo", GetMachineInfo);
-            hubConnection.On("UpdateMachineLoad", GetMachineLoad);
+            _hubConnection.On("CollectMachineInfo", GetMachineInfo);
+            _hubConnection.On("UpdateMachineLoad", GetMachineLoad);
 
-            hubConnection.StartAsync();
+            await _hubConnection.StartAsync();
         }
 
         private async Task HubConnection_Closed(Exception arg)
         {
-            Disconnect?.Invoke(_connectUri);
+            Disconnect?.Invoke(_connectURI);
         }
 
         #region RegisterModule logic
@@ -55,7 +57,7 @@ namespace DNet_Communication.Connection
         {
             try
             {
-                await hubConnection.InvokeAsync("RegisterModule", moduleType);
+                await _hubConnection.InvokeAsync("RegisterModule", moduleType);
             }
             catch(Exception e)
             {
@@ -67,7 +69,7 @@ namespace DNet_Communication.Connection
         {
             if (result == "Ok")
             {
-                SuccessfullRegister(_connectUri);
+                SuccessfullRegister?.Invoke(_connectURI);
                 return;
             }
             else
@@ -93,13 +95,13 @@ namespace DNet_Communication.Connection
         public event ConnectionHandle ConnectionRestored;
         public event ConnectionHandle Disconnect;
 
-        public bool IsConnected { get { return hubConnection.State == HubConnectionState.Connected;} }
+        public bool IsConnected { get { return _hubConnection.State == HubConnectionState.Connected;} }
 
 
         public async Task<bool> Connect(string connectionUri, ModuleTypes moduleType)
         {
-            if (hubConnection == null)
-                Initialize(connectionUri);
+            if (_hubConnection == null)
+                await Initialize(connectionUri);
 
             await Register(moduleType);
 
@@ -111,7 +113,7 @@ namespace DNet_Communication.Connection
             try
             {
                 MachineSpecifications machineInfo = await _serviceCollector.GetMachineInfo();
-                await hubConnection.InvokeAsync("RecieveMachineInfo", machineInfo);
+                await _hubConnection.InvokeAsync("RecieveMachineInfo", machineInfo);
             }
             catch(Exception e)
             {
@@ -130,6 +132,54 @@ namespace DNet_Communication.Connection
             {
 
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="adressPool"></param>
+        /// <returns></returns>
+        //public Task<string[]> HubSearching(string adressPool)
+        //{
+            
+
+
+        //    return null;
+        //}
+
+        #endregion
+
+        #region Helpers
+
+        private void CheckConnectionURI(ref string uri)
+        {
+            uri = uri.Replace(" ", ""); //remove all spaces
+
+            if(!uri.Replace("http://", "").Contains(":")) //means that uri doesn't have port, use default port
+            {
+                uri += ":39286/mainhub";
+            }
+            //if uri has ports, do nothing
+        }
+
+
+        #endregion
+
+        #region Disposing
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            InternalDispose();
+            GC.SuppressFinalize(this);
+        }
+
+        private void InternalDispose()
+        {
+            _hubConnection.DisposeAsync();
+            _serviceCollector.Dispose();
         }
 
         #endregion

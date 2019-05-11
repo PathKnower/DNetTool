@@ -46,6 +46,8 @@ namespace DNet_Hub.Hubs
             await this.Groups.AddToGroupAsync(Context.ConnectionId, moduleType.ToString());
             UserGroup.Add(Context.ConnectionId, moduleType.ToString());
 
+            Console.WriteLine($"Successfully registered module: {moduleType.ToString()}, Connection ID: {Context.ConnectionId}");
+
             await this.Clients.Caller.SendAsync("OnRegister", "Ok"); //Callback that successfull register module
         }
         
@@ -53,10 +55,12 @@ namespace DNet_Hub.Hubs
         /// Unregister module from group
         /// </summary>
         /// <returns></returns>
-        public async Task UnregisterModule()
+        public async Task UnregisterModule(string connectionID)
         {
-            string connectionId = Context.ConnectionId;
+            string connectionId = connectionID;
             await Groups.RemoveFromGroupAsync(connectionId, UserGroup[connectionId]);
+
+            Console.WriteLine($"Unregistering module: {UserGroup[connectionId]}, Connection ID: {connectionId}");
             UserGroup.Remove(connectionId);
 
             var module = Modules.FirstOrDefault(x => x.ConnectionId == connectionId);
@@ -71,7 +75,8 @@ namespace DNet_Hub.Hubs
         /// <returns></returns>
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            UnregisterModule();
+            UnregisterModule(Context.ConnectionId);
+            Console.WriteLine($"{Context.ConnectionId} disconnected");
             return base.OnDisconnectedAsync(exception);
         }
 
