@@ -31,6 +31,7 @@ namespace DNet_Processing
             services.AddSingleton(provider => Configuration); //Add config to DI
             services.AddSingleton<IMachineInfoCollectorService, MachineInfoCollectorService>();
             services.AddSingleton<IConnect, HubConnect>(); //One connection instances for all ??
+            services.AddSingleton<IConnectionService, ConnectionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

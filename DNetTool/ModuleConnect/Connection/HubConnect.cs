@@ -95,7 +95,7 @@ namespace DNet_Communication.Connection
         public event ConnectionHandle ConnectionRestored;
         public event ConnectionHandle Disconnect;
 
-        public bool IsConnected { get { return _hubConnection.State == HubConnectionState.Connected;} }
+        public bool IsConnected { get { return _hubConnection?.State == HubConnectionState.Connected;} }
 
 
         public async Task<bool> Connect(string connectionUri, ModuleTypes moduleType)
