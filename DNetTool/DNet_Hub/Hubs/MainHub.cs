@@ -8,27 +8,46 @@ using DNet_DataContracts.Maintance;
 using DNet_DataContracts;
 
 using DNet_Hub.Communication;
+using Microsoft.Extensions.Logging;
 
 namespace DNet_Hub.Hubs
 {
     public class MainHub : Hub
     {
+        private static string HubGUID = null;
+
         public delegate void MachineHardwareEvent(string id, MachineSpecifications info);
         public event MachineHardwareEvent UpdatedMachineInfo;
 
+        private ILogger<MainHub> _logger;
+        
+        public MainHub(ILogger<MainHub> logger)
+        {
+            _logger = logger;
+
+            if(string.IsNullOrEmpty(HubGUID))
+            {
+                HubGUID = Guid.NewGuid().ToString();
+                _logger.LogInformation($"Guid of current Hub for this session: \'{HubGUID}\'");
+            }
+
+            if (UserGroup == null)
+                UserGroup = new Dictionary<string, string>();
+
+            if (Modules == null)
+                Modules = new List<ModuleHubWrapper>();
+        }
+
+        #region Properties
 
         /// <summary>
         /// Store module connection id (key) and module group (value)
         /// </summary>
-        private Dictionary<string, string> UserGroup { get; set; } 
-        
-        IList<ModuleHubWrapper> Modules { get; set; }
+        private static Dictionary<string, string> UserGroup { get; set; }
 
-        public MainHub()
-        {
-            UserGroup = new Dictionary<string, string>();
-            Modules = new List<ModuleHubWrapper>();
-        }
+        private static List<ModuleHubWrapper> Modules { get; set; } 
+
+        #endregion
 
         #region Register Logic
 
@@ -46,9 +65,9 @@ namespace DNet_Hub.Hubs
             await this.Groups.AddToGroupAsync(Context.ConnectionId, moduleType.ToString());
             UserGroup.Add(Context.ConnectionId, moduleType.ToString());
 
-            Console.WriteLine($"Successfully registered module: {moduleType.ToString()}, Connection ID: {Context.ConnectionId}");
+            _logger.LogInformation($"Successfully registered module: {moduleType.ToString()}, Connection ID: {Context.ConnectionId}");
 
-            await this.Clients.Caller.SendAsync("OnRegister", "Ok"); //Callback that successfull register module
+            await this.Clients.Caller.SendAsync("OnRegister", "Ok", HubGUID); //Callback that successfull register module
         }
         
         /// <summary>
@@ -60,7 +79,7 @@ namespace DNet_Hub.Hubs
             string connectionId = connectionID;
             await Groups.RemoveFromGroupAsync(connectionId, UserGroup[connectionId]);
 
-            Console.WriteLine($"Unregistering module: {UserGroup[connectionId]}, Connection ID: {connectionId}");
+            _logger.LogInformation($"Unregistering module: {UserGroup[connectionId]}, Connection ID: {connectionId}");
             UserGroup.Remove(connectionId);
 
             var module = Modules.FirstOrDefault(x => x.ConnectionId == connectionId);
@@ -75,12 +94,15 @@ namespace DNet_Hub.Hubs
         /// <returns></returns>
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            UnregisterModule(Context.ConnectionId);
-            Console.WriteLine($"{Context.ConnectionId} disconnected");
+            UnregisterModule(Context.ConnectionId).Wait();
+            _logger.LogInformation($"Module disconnected: ConnectionId: \'{Context.ConnectionId}\'");
+            //Console.WriteLine($"{Context.ConnectionId} disconnected");
             return base.OnDisconnectedAsync(exception);
         }
 
         #endregion
+
+
 
         #region Maintance region
 

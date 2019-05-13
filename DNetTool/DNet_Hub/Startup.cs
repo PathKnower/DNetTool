@@ -32,7 +32,12 @@ namespace DNet_Hub
         {
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
-            services.AddSignalR(); 
+            
+
+            services.AddSignalR().AddHubOptions<MainHub>(options =>
+            { 
+               
+            }); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

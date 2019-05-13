@@ -39,7 +39,7 @@ namespace DNet_Communication.Connection
 
             _hubConnection.Closed += HubConnection_Closed;
 
-            _hubConnection.On<string>("OnRegister", OnRegister);
+            _hubConnection.On<string, string>("OnRegister", OnRegister);
 
             _hubConnection.On("CollectMachineInfo", GetMachineInfo);
             _hubConnection.On("UpdateMachineLoad", GetMachineLoad);
@@ -65,11 +65,11 @@ namespace DNet_Communication.Connection
             }
         }
 
-        private async void OnRegister(string result)
+        private async void OnRegister(string result, string hubGuid)
         {
             if (result == "Ok")
             {
-                SuccessfullRegister?.Invoke(_connectURI);
+                SuccessfullRegister?.Invoke(hubGuid);
                 return;
             }
             else
@@ -91,9 +91,9 @@ namespace DNet_Communication.Connection
 
         #region Inteface Implementation
 
-        public event ConnectionHandle SuccessfullRegister;
-        public event ConnectionHandle ConnectionRestored;
-        public event ConnectionHandle Disconnect;
+        public event ConnectionHandler SuccessfullRegister;
+        public event ConnectionHandler ConnectionRestored;
+        public event ConnectionHandler Disconnect;
 
         public bool IsConnected { get { return _hubConnection?.State == HubConnectionState.Connected;} }
 

@@ -8,13 +8,12 @@ using DNet_DataContracts.Maintance;
 
 namespace DNet_Communication.Connection
 {
-    public delegate void ConnectionHandle(string uri);
 
     public interface IConnect : IDisposable
     {
-        event ConnectionHandle SuccessfullRegister;
-        event ConnectionHandle ConnectionRestored;
-        event ConnectionHandle Disconnect;
+        event ConnectionHandler SuccessfullRegister;
+        event ConnectionHandler ConnectionRestored;
+        event ConnectionHandler Disconnect;
 
         bool IsConnected { get; }
 

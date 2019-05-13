@@ -21,11 +21,14 @@ namespace DNet_Communication.Connection
 
         private Timer _connectionTimer;
 
+
         public ConnectionService(IConfiguration configuration, IConnect connectionInstance, ILogger<ConnectionService> logger)
         {
             _configuration = configuration;
             _connectionInstance = connectionInstance;
             _logger = logger;
+
+            EventSubscribe();
         }
 
 
@@ -49,15 +52,32 @@ namespace DNet_Communication.Connection
             {
                 ConnectToHub().Wait();
             }
-
-
         }
 
-        public async Task SendTask(DNet_DataContracts.Processing.Task task, ModuleTypes requiredModule)
+        #region Events 
+
+        public event ConnectionHandler SuccessfullRegister;
+
+
+        private void _connectionInstance_SuccessfullRegister(string HubGUID)
+        {
+            SuccessfullRegister?.Invoke(HubGUID);
+            _logger.LogInformation("Successfull register on hub with GUID: " + HubGUID);
+        }
+
+        private void _connectionInstance_ConnectionRestored(string HubGUID)
         {
             throw new NotImplementedException();
         }
 
+        private void _connectionInstance_Disconnect(string HubGUID)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+
+        #endregion
 
         #region Hub connection logic
 
@@ -81,6 +101,7 @@ namespace DNet_Communication.Connection
 
         public void Dispose()
         {
+            EventUnsubscribe();
             _connectionInstance.Dispose();
             _connectionTimer.Dispose();
 
@@ -91,6 +112,20 @@ namespace DNet_Communication.Connection
 
 
         #region Helpers
+
+        private void EventSubscribe()
+        {
+            _connectionInstance.SuccessfullRegister += _connectionInstance_SuccessfullRegister;
+            _connectionInstance.Disconnect += _connectionInstance_Disconnect;
+            _connectionInstance.ConnectionRestored += _connectionInstance_ConnectionRestored;
+        }
+
+        private void EventUnsubscribe()
+        {
+            _connectionInstance.SuccessfullRegister -= _connectionInstance_SuccessfullRegister;
+            _connectionInstance.Disconnect -= _connectionInstance_Disconnect;
+            _connectionInstance.ConnectionRestored -= _connectionInstance_ConnectionRestored;
+        }
 
         #endregion
     }
