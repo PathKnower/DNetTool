@@ -75,8 +75,6 @@ namespace DNet_Communication.Connection
             throw new NotImplementedException();
         }
 
-        
-
         #endregion
 
         #region Hub connection logic

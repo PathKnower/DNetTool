@@ -45,6 +45,9 @@ namespace DNet_Hub.Hubs
         /// </summary>
         private static Dictionary<string, string> UserGroup { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private static List<ModuleHubWrapper> Modules { get; set; } 
 
         #endregion

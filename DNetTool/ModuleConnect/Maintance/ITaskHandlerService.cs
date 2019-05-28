@@ -7,10 +7,14 @@ using DNet_DataContracts;
 
 namespace DNet_Communication.Maintance
 {
+    public delegate void TaskHandler();
+
+    public delegate void TaskTransmitHandler(DNet_DataContracts.Processing.Task task);
+
     public interface ITaskHandlerService
     {
 
-
+        event TaskTransmitHandler TaskRecieve;
 
         /// <summary>
         /// 
