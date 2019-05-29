@@ -1,10 +1,10 @@
-﻿@page "/fetchdata"
-@using DNet_UI_Module.Shared
-@inject HttpClient Http
+@page "/fetchdata"
+@using DNet_UI_Module.Data
+@inject WeatherForecastService ForecastService
 
 <h1>Weather forecast</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p>This component demonstrates fetching data from a service.</p>
 
 @if (forecasts == null)
 {
@@ -40,6 +40,6 @@ else
 
     protected override async Task OnInitAsync()
     {
-        forecasts = await Http.GetJsonAsync<WeatherForecast[]>("api/SampleData/WeatherForecasts");
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
     }
 }
