@@ -67,12 +67,12 @@ namespace DNet_Communication.Connection
 
         private void _connectionInstance_ConnectionRestored(string HubGUID)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void _connectionInstance_Disconnect(string HubGUID)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         #endregion

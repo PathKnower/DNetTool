@@ -31,7 +31,7 @@ namespace DNet_Processing
             services.AddSingleton(provider => Configuration); //Add config to DI
             services.AddSingleton<IMachineInfoCollectorService, MachineInfoCollectorService>();
             services.AddSingleton<IConnect, HubConnect>();
-            services.AddSingleton<ITaskHandlerService, TaskHandlerService>();
+            services.AddSingleton<ITaskHandlerService, BaseTaskHandlerService>();
             services.AddSingleton<IConnectionService, ConnectionService>();
         }
 

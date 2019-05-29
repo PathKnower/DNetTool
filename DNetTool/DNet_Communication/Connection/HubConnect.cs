@@ -9,6 +9,7 @@ using DNet_DataContracts.Maintance;
 
 using DNet_Communication.Maintance;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace DNet_Communication.Connection
 {
@@ -41,6 +42,8 @@ namespace DNet_Communication.Connection
 
             _hubConnection.On<string, string>("OnRegister", OnRegister);
 
+            _hubConnection.On<DNet_DataContracts.Processing.Task>("TaskRecieve", OnTaskRecieve);
+
             _hubConnection.On("CollectMachineInfo", GetMachineInfo);
             _hubConnection.On("UpdateMachineLoad", GetMachineLoad);
 
@@ -53,6 +56,7 @@ namespace DNet_Communication.Connection
         }
 
         #region RegisterModule logic
+
         public async Task Register(ModuleTypes moduleType)
         {
             try
@@ -87,6 +91,11 @@ namespace DNet_Communication.Connection
 
         private async void GetMachineLoad() => await UpdateMachineLoad();
 
+        private async void OnTaskRecieve(DNet_DataContracts.Processing.Task task)
+        {
+            TaskRecieve?.Invoke(task); //TODO: if there is no subscribers, create a new one or send a callback
+        }
+
         #endregion
 
         #region Inteface Implementation
@@ -94,6 +103,7 @@ namespace DNet_Communication.Connection
         public event ConnectionHandler SuccessfullRegister;
         public event ConnectionHandler ConnectionRestored;
         public event ConnectionHandler Disconnect;
+        public event TaskTransmitHandler TaskRecieve;
 
         public bool IsConnected { get { return _hubConnection?.State == HubConnectionState.Connected;} }
 
@@ -107,6 +117,26 @@ namespace DNet_Communication.Connection
 
             return true;
         }
+
+
+
+
+        public async Task<bool> SendToHub(string methodName, object arg)
+        {
+            if(!IsConnected)
+            {
+                //Handle connection
+                return false;
+            }
+
+            _logger.LogDebug($"{GetCallerName()} send to \'{methodName}\'");
+            await _hubConnection.InvokeAsync(methodName, arg);
+
+            return true;
+        }
+
+
+
 
         public async Task CollectMachineInfo()
         {
@@ -134,19 +164,6 @@ namespace DNet_Communication.Connection
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="adressPool"></param>
-        /// <returns></returns>
-        //public Task<string[]> HubSearching(string adressPool)
-        //{
-            
-
-
-        //    return null;
-        //}
-
         #endregion
 
         #region Helpers
@@ -162,6 +179,10 @@ namespace DNet_Communication.Connection
             //if uri has ports, do nothing
         }
 
+        private static string GetCallerName([CallerMemberName]string name = "")
+        {
+            return name + " Action:";
+        }
 
         #endregion
 
@@ -181,6 +202,8 @@ namespace DNet_Communication.Connection
             _hubConnection.DisposeAsync();
             _serviceCollector.Dispose();
         }
+
+        
 
         #endregion
     }

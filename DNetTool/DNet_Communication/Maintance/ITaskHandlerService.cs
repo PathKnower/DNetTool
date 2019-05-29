@@ -22,6 +22,6 @@ namespace DNet_Communication.Maintance
         /// <param name="task"></param>
         /// <param name="requiredModule"></param>
         /// <returns></returns>
-        Task SendTask(DNet_DataContracts.Processing.Task task, ModuleTypes requiredModule);
+        Task SendTask(DNet_DataContracts.Processing.Task task);
     }
 }

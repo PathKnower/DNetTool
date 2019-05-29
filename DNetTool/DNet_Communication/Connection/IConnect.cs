@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
+using DNet_Communication.Maintance;
+
 using DNet_DataContracts;
 using DNet_DataContracts.Maintance;
 
@@ -14,6 +16,8 @@ namespace DNet_Communication.Connection
         event ConnectionHandler SuccessfullRegister;
         event ConnectionHandler ConnectionRestored;
         event ConnectionHandler Disconnect;
+
+        event TaskTransmitHandler TaskRecieve;
 
         bool IsConnected { get; }
 
@@ -35,6 +39,15 @@ namespace DNet_Communication.Connection
         /// </summary>
         /// <returns></returns>
         Task UpdateMachineLoad();
+
+        
+        /// <summary>
+        /// Unificated method to transmit data to the Hub
+        /// </summary>
+        /// <param name="methodName">Handler name on Hub</param>
+        /// <param name="args">Argument</param>
+        /// <returns></returns>
+        Task<bool> SendToHub(string methodName, object arg);
 
         /// <summary>
         /// 
