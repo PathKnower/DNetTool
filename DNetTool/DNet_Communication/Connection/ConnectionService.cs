@@ -81,12 +81,12 @@ namespace DNet_Communication.Connection
 
         private async Task ConnectToHub()
         {
-            if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"], ModuleTypes.Processing))
+            if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"], _currentModuleType))
             {
                 _logger.LogInformation($"Successfully connected to Primary Hub which located on: {_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"]}");
                 //Console.WriteLine("Connected to first hub");
             }
-            else if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"], ModuleTypes.Processing))
+            else if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"], _currentModuleType))
             {
                 _logger.LogInformation($"Successfully connected to Secondary Hub which located on: {_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"]}");
                 //Console.WriteLine("Connected to second hub");
