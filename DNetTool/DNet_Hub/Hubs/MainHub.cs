@@ -109,6 +109,11 @@ namespace DNet_Hub.Hubs
 
         #region Maintance region
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="moduleInfo"></param>
+        /// <returns></returns>
         public async Task RecieveMachineInfo(MachineSpecifications moduleInfo)
         {
             UpdatedMachineInfo?.Invoke(Context.ConnectionId, moduleInfo);

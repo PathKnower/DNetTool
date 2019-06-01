@@ -6,7 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 using DNet_Communication.Connection;
 using DNet_Communication.Maintance;
-using DNet_Processing.Hubs;
+
+using DNet_Processing.Processing;
 
 namespace DNet_Processing
 {
@@ -25,14 +26,16 @@ namespace DNet_Processing
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
-            services.AddSignalR();
+            //services.AddSignalR();
             services.AddSingleton(provider => Configuration); //Add config to DI
             services.AddSingleton<IMachineInfoCollectorService, MachineInfoCollectorService>();
             services.AddSingleton<IConnect, HubConnect>();
-            services.AddSingleton<ITaskHandlerService, BaseTaskHandlerService>();
+            //services.AddSingleton<IBaseTaskHandlerService, BaseTaskHandlerService>();
+            services.AddSingleton<IProcessingModuleDemontrationTaskHandler, ProcessingModuleDemontrationTaskHandler>();
             services.AddSingleton<IConnectionService, ConnectionService>();
+            //services.AddSingleton<>
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,13 +50,13 @@ namespace DNet_Processing
                 app.UseHsts();
             }
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<LobbyHub>("/lobby");
-            });
+            //app.UseSignalR(routes =>
+            //{
+            //    routes.MapHub<LobbyHub>("/lobby");
+            //});
 
             //app.UseHttpsRedirection();
-            app.UseMvc();
+            //app.UseMvc();
         }
     }
 }

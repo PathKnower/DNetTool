@@ -17,7 +17,7 @@ namespace DNet_Communication.Maintance
     /// <summary>
     /// Base implemetation of TaskHandlerService
     /// </summary>
-    public class BaseTaskHandlerService : ITaskHandlerService
+    public class BaseTaskHandlerService : IBaseTaskHandlerService
     {
         protected IConnect _connectionInstance;
 
@@ -31,9 +31,8 @@ namespace DNet_Communication.Maintance
             _taskQueue = new Queue<CombinedTask>();
             _currentTasks = new List<DNet_DataContracts.Processing.Task>();
 
-            // _connectionInstance.TaskRecieve += TaskRecieved;
+            _connectionInstance.TaskRecieve += TaskRecieve;
             TaskRecieve += TaskRecieved;
-            // _connectionInstance.TaskRecieve += TaskRecieve;
         }
 
 

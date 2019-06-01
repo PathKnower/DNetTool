@@ -60,8 +60,6 @@ namespace DNet_Processing
 
             return builder.Build();
         }
-
-        //TODO: create a conection service
         
     }
 }
