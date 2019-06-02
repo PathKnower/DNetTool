@@ -13,7 +13,7 @@ namespace DNet_Communication.Connection
     {
         event ConnectionHandler SuccessfullRegister;
 
-        void ScheduleConnectionInitialize(TimeSpan interval, ModuleTypes moduleType);
+        void ScheduleConnectionInitialize(TimeSpan interval, string moduleType);
 
 
     }

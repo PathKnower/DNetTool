@@ -32,7 +32,7 @@ namespace DNet_Processing
                 #region Services
 
                 var connectionService = (IConnectionService)host.Services.GetService(typeof(IConnectionService));
-                connectionService.ScheduleConnectionInitialize(TimeSpan.FromSeconds(5), DNet_DataContracts.ModuleTypes.Processing); //initialize connection without user input
+                connectionService.ScheduleConnectionInitialize(TimeSpan.FromSeconds(5), "Processing"); //initialize connection without user input
                 
                 #endregion
 

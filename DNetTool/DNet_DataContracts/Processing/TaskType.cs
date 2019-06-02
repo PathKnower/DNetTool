@@ -9,16 +9,16 @@ namespace DNet_DataContracts.Processing
         /// <summary>
         /// 
         /// </summary>
-        DataRequest = 0,
+        Search = 0,
 
         /// <summary>
         /// 
         /// </summary>
-        Search,
+        Calculate,
 
         /// <summary>
         /// 
         /// </summary>
-        Calculate
+        DataRequest
     }
 }

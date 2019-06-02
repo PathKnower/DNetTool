@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 using DNet_Communication.Maintance;
 
-
 namespace DNet_UI_Demonstration.Logic
 {
-    public interface IUITaskHandlerService : IBaseTaskHandlerService
+    public interface IUITypeEvaluateService : ITypeEvaluateService
     {
     }
 }

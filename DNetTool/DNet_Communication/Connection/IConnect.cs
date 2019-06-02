@@ -21,12 +21,16 @@ namespace DNet_Communication.Connection
 
         bool IsConnected { get; }
 
+        string ConnectionId { get; }
+
+        string ModuleType { get; }
+
         /// <summary>
         /// Connect to the module 
         /// </summary>
         /// <param name="moduleType"></param>
         /// <returns></returns>
-        Task<bool> Connect(string connectionUri, ModuleTypes moduleType);
+        Task<bool> Connect(string connectionUri, string moduleType);
 
         /// <summary>
         /// Collect full machine info, calculate Processing points

@@ -15,7 +15,7 @@ namespace DNet_Manager.Hubs
 {
     public class LobbyHub : Hub
     {
-        public delegate void ConnectionEvent(ModuleTypes targetModule);
+        public delegate void ConnectionEvent(string targetModule);
         public event ConnectionEvent ConnectionInitialized;
         public event ConnectionEvent DisconnectFromModule;
 
@@ -47,13 +47,13 @@ namespace DNet_Manager.Hubs
 
         private async Task ConnectToHub()
         {
-            if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"], ModuleTypes.Manager))
-            {
+            //if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"], ModuleTypes.Manager))
+            //{
                 
-            } else if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"], ModuleTypes.Manager))
-            {
+            //} else if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"], ModuleTypes.Manager))
+            //{
 
-            }
+            //}
             _logger.LogCritical("Could not connect to any hub, looking for available hubs in network"); //TODO: Make this feature
         }
     }

@@ -23,21 +23,26 @@ namespace DNet_PostgreSQL_Demonstration
         {
             //CreateHostBuilder(args).Build().Run();
 
+            LogManager.Configuration = new NLog.Config.LoggingConfiguration();
+            LogManager.Configuration.AddTarget("console", new NLog.Targets.ColoredConsoleTarget());
+
             _logger = LogManager.GetCurrentClassLogger();
 
             try
             {
-                IWebHost host = CreateWebHost(args);
+                IHost host = CreateHostBuilder(args).Build();
 
                 host.Start();
 
                 #region Services
 
                 var connectionService = (IConnectionService)host.Services.GetService(typeof(IConnectionService));
-                connectionService.ScheduleConnectionInitialize(TimeSpan.FromSeconds(5), DNet_DataContracts.ModuleTypes.Processing); //initialize connection without user input
+                var taskHandlerService = (IPostgreSQLDemonstrationTaskHandlerService)host.Services.GetService(typeof(IPostgreSQLDemonstrationTaskHandlerService));
+
+                connectionService.ScheduleConnectionInitialize(TimeSpan.FromSeconds(5), "DB_Postgres"); //initialize connection without user input
+                taskHandlerService.Initialize();
 
                 //TestConnect testConnect = new TestConnect();
-
 
                 #endregion
 
@@ -60,18 +65,19 @@ namespace DNet_PostgreSQL_Demonstration
         //            webBuilder.UseStartup<Startup>();
         //        });
 
-        public static IWebHost CreateWebHost(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var builder = WebHost.CreateDefaultBuilder(args);
+            var builder = Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(options => 
+                {
+                    options.UseStartup<Startup>();
+                    options.UseNLog();
+                });
             //builder.UseConfiguration(new ConfigurationBuilder()
             //    .AddCommandLine(args)
             //    .Build());
 
-            builder.UseStartup<Startup>();
-            //builder.UseUrls("http://*:39753;http://*:39853");
-            builder.UseNLog();
-
-            return builder.Build();
+            return builder;
         }
     }
 }

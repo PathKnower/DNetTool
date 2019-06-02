@@ -10,6 +10,8 @@ using DNet_DataContracts;
 using DNet_Hub.Communication;
 using Microsoft.Extensions.Logging;
 
+using DNet_Hub.Processing;
+
 namespace DNet_Hub.Hubs
 {
     public class MainHub : Hub
@@ -20,10 +22,13 @@ namespace DNet_Hub.Hubs
         public event MachineHardwareEvent UpdatedMachineInfo;
 
         private ILogger<MainHub> _logger;
-        
-        public MainHub(ILogger<MainHub> logger)
+        private ITaskHandlerService _taskHandlerService;
+
+
+        public MainHub(ILogger<MainHub> logger, ITaskHandlerService taskHandlerService)
         {
             _logger = logger;
+            _taskHandlerService = taskHandlerService;
 
             if(string.IsNullOrEmpty(HubGUID))
             {
@@ -59,16 +64,16 @@ namespace DNet_Hub.Hubs
         /// </summary>
         /// <param name="groupName">Module group</param>
         /// <returns></returns>
-        public async Task RegisterModule(ModuleTypes moduleType)
+        public async Task RegisterModule(string moduleType)
         {
             ModuleHubWrapper newModule = new ModuleHubWrapper(Context.ConnectionId, this);
             newModule.TargedModule.ModuleType = moduleType;
             Modules.Add(newModule); //add new module to maintance module info
 
-            await this.Groups.AddToGroupAsync(Context.ConnectionId, moduleType.ToString());
-            UserGroup.Add(Context.ConnectionId, moduleType.ToString());
+            await this.Groups.AddToGroupAsync(Context.ConnectionId, moduleType);
+            UserGroup.Add(Context.ConnectionId, moduleType);
 
-            _logger.LogInformation($"Successfully registered module: {moduleType.ToString()}, Connection ID: {Context.ConnectionId}");
+            _logger.LogInformation($"Successfully registered module: {moduleType}, Connection ID: {Context.ConnectionId}");
 
             await this.Clients.Caller.SendAsync("OnRegister", "Ok", HubGUID); //Callback that successfull register module
         }
@@ -88,6 +93,8 @@ namespace DNet_Hub.Hubs
             var module = Modules.FirstOrDefault(x => x.ConnectionId == connectionId);
             if(module != null)
                 Modules.Remove(module);
+
+            //TODO: If there is a task is on run, cancel it
         }
 
         /// <summary>
@@ -105,6 +112,20 @@ namespace DNet_Hub.Hubs
 
         #endregion
 
+
+        #region Task Handling
+
+        public async Task TaskReciever(DNet_DataContracts.Processing.Task task)
+        {
+            _taskHandlerService.TaskEvaluate(task);
+        }
+
+        public async Task ModuleUnsupportTaskType(DNet_DataContracts.Processing.Task task)
+        {
+            //Handle this 
+        }
+
+        #endregion
 
 
         #region Maintance region

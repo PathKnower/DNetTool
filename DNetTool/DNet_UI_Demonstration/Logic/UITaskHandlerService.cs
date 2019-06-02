@@ -5,16 +5,26 @@ using System.Threading.Tasks;
 
 using DNet_Communication.Connection;
 using DNet_Communication.Maintance;
+using DNet_DataContracts.Processing;
 
 namespace DNet_UI_Demonstration.Logic
 {
     public class UITaskHandlerService : BaseTaskHandlerService, IUITaskHandlerService
     {
-        public UITaskHandlerService(IConnect connectionInstance)
+        IUITypeEvaluateService _typeEvaluateService;
+
+        public UITaskHandlerService(IConnect connectionInstance, IUITypeEvaluateService typeEvaluateService)
             : base(connectionInstance)
         {
 
         }
 
+
+        public override async System.Threading.Tasks.Task SendTask(DNet_DataContracts.Processing.Task task)
+        {
+
+
+            await base.SendTask(task);
+        }
     }
 }

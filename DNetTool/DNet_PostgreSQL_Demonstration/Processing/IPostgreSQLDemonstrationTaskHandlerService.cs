@@ -8,5 +8,7 @@ namespace DNet_PostgreSQL_Demonstration.Processing
 {
     interface IPostgreSQLDemonstrationTaskHandlerService : IBaseTaskHandlerService
     {
+
+        void Initialize();
     }
 }

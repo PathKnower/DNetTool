@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DNet_Hub.Hubs;
+using DNet_Hub.Processing;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,7 +33,7 @@ namespace DNet_Hub
         {
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
-            
+            services.AddScoped<ITaskHandlerService, TaskHandlerService>();
 
             services.AddSignalR().AddHubOptions<MainHub>(options =>
             { 

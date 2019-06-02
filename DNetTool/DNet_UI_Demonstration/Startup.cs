@@ -11,14 +11,16 @@ using DNet_UI_Demonstration.Data;
 using Microsoft.Extensions.Configuration;
 using DNet_Communication.Maintance;
 using DNet_Communication.Connection;
+using DNet_UI_Demonstration.Logic;
 
 namespace DNet_UI_Demonstration
 {
     public class Startup
     {
-        Microsoft.AspNetCore.Hosting.IHostingEnvironment _env;
+        IWebHostEnvironment _env;
 
-        public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
             _env = environment;
@@ -38,6 +40,8 @@ namespace DNet_UI_Demonstration
             services.AddSingleton<IMachineInfoCollectorService, MachineInfoCollectorService>();
             services.AddSingleton<IConnect, HubConnect>();
             services.AddSingleton<IConnectionService, ConnectionService>();
+            services.AddSingleton<IUITypeEvaluateService, UITypeEvaluateService>();
+            services.AddSingleton<IUITaskHandlerService, UITaskHandlerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

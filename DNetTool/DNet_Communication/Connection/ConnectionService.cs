@@ -17,7 +17,7 @@ namespace DNet_Communication.Connection
         private IConfiguration _configuration;
 
         private IConnect _connectionInstance;
-        private ModuleTypes _currentModuleType;
+        private string _currentModuleType;
 
         private Timer _connectionTimer;
 
@@ -32,7 +32,7 @@ namespace DNet_Communication.Connection
         }
 
 
-        public void ScheduleConnectionInitialize(TimeSpan interval, ModuleTypes moduleType)
+        public void ScheduleConnectionInitialize(TimeSpan interval, string moduleType)
         {
             _connectionTimer = new Timer
             {
@@ -62,7 +62,8 @@ namespace DNet_Communication.Connection
         private void _connectionInstance_SuccessfullRegister(string HubGUID)
         {
             SuccessfullRegister?.Invoke(HubGUID);
-            _logger.LogInformation("Successfull register on hub with GUID: " + HubGUID);
+            _logger.LogInformation("Successfull register on hub with GUID: \'{0}\', ConnectionID: {1}", HubGUID, _connectionInstance.ConnectionId);
+
         }
 
         private void _connectionInstance_ConnectionRestored(string HubGUID)

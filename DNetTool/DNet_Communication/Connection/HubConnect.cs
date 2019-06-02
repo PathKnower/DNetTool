@@ -20,6 +20,10 @@ namespace DNet_Communication.Connection
         private IMachineInfoCollectorService _serviceCollector;
         private bool _disposed;
 
+        private string _moduleType = string.Empty;
+
+        private string _hubGuid = string.Empty;
+
         HubConnection _hubConnection;
 
         public HubConnect(ILogger<HubConnect> logger, IMachineInfoCollectorService serviceCollector)
@@ -52,15 +56,16 @@ namespace DNet_Communication.Connection
 
         private async Task HubConnection_Closed(Exception arg)
         {
-            Disconnect?.Invoke(_connectURI);
+            Disconnect?.Invoke(_hubGuid);
         }
 
         #region RegisterModule logic
 
-        public async Task Register(ModuleTypes moduleType)
+        public async Task Register(string moduleType)
         {
             try
             {
+                _moduleType = moduleType;
                 await _hubConnection.InvokeAsync("RegisterModule", moduleType);
             }
             catch(Exception e)
@@ -73,7 +78,8 @@ namespace DNet_Communication.Connection
         {
             if (result == "Ok")
             {
-                SuccessfullRegister?.Invoke(hubGuid);
+                _hubGuid = hubGuid;
+                SuccessfullRegister?.Invoke(_hubGuid);
                 return;
             }
             else
@@ -107,8 +113,11 @@ namespace DNet_Communication.Connection
 
         public bool IsConnected { get { return _hubConnection?.State == HubConnectionState.Connected;} }
 
+        public string ConnectionId { get { return _hubConnection?.ConnectionId; } }
 
-        public async Task<bool> Connect(string connectionUri, ModuleTypes moduleType)
+        public string ModuleType { get { return _moduleType; } }
+
+        public async Task<bool> Connect(string connectionUri, string moduleType)
         {
             if (_hubConnection == null)
                 await Initialize(connectionUri);

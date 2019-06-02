@@ -5,9 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Implements\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="wwwroot\" />
+    <Compile Remove="Implements\**" />
+    <Compile Remove="Interfaces\**" />
+    <Compile Remove="wwwroot\**" />
+    <Content Remove="Implements\**" />
+    <Content Remove="Interfaces\**" />
+    <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Implements\**" />
+    <EmbeddedResource Remove="Interfaces\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="Implements\**" />
+    <None Remove="Interfaces\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>

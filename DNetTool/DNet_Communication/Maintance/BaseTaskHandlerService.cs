@@ -45,7 +45,7 @@ namespace DNet_Communication.Maintance
             _currentTasks.Add(task);
         }
 
-        public async Task SendTask(DNet_DataContracts.Processing.Task task)
+        public virtual async Task SendTask(DNet_DataContracts.Processing.Task task)
         {
             await _connectionInstance.SendToHub("TaskReciever", task);
         }

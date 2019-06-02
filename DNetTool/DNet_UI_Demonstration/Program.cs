@@ -28,7 +28,7 @@ namespace DNet_UI_Demonstration
                 #region Services
 
                 var connectionService = (IConnectionService)host.Services.GetService(typeof(IConnectionService));
-                connectionService.ScheduleConnectionInitialize(TimeSpan.FromSeconds(5), DNet_DataContracts.ModuleTypes.UI); //initialize connection without user input
+                connectionService.ScheduleConnectionInitialize(TimeSpan.FromSeconds(5), "UI_Blazor"); //initialize connection without user input
 
                 #endregion
 
@@ -47,9 +47,6 @@ namespace DNet_UI_Demonstration
         public static IWebHost CreateWebHost(string[] args)
         {
             var builder = WebHost.CreateDefaultBuilder(args);
-            //builder.UseConfiguration(new ConfigurationBuilder()
-            //    .AddCommandLine(args)
-            //    .Build());
 
             builder.UseStartup<Startup>();
             //builder.UseUrls("http://*:39753;http://*:39853");
@@ -57,12 +54,5 @@ namespace DNet_UI_Demonstration
 
             return builder.Build();
         }
-
-        //public static IHostBuilder CreateHostBuilder(string[] args) =>
-        //    Host.CreateDefaultBuilder(args)
-        //        .ConfigureWebHostDefaults(webBuilder =>
-        //        {
-        //            webBuilder.UseStartup<Startup>();
-        //        });
     }
 }
