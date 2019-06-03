@@ -18,7 +18,7 @@ namespace DNet_Hub.Hubs
     {
         private static string HubGUID = null;
 
-        public delegate void MachineHardwareEvent(string id, MachineSpecifications info);
+        public delegate void MachineHardwareEvent(string id, object info);
         public event MachineHardwareEvent UpdatedMachineInfo;
 
         private ILogger<MainHub> _logger;
@@ -76,6 +76,7 @@ namespace DNet_Hub.Hubs
             _logger.LogInformation($"Successfully registered module: {moduleType}, Connection ID: {Context.ConnectionId}");
 
             await this.Clients.Caller.SendAsync("OnRegister", "Ok", HubGUID); //Callback that successfull register module
+            await this.Clients.Caller.SendAsync("CollectMachineInfo");
         }
         
         /// <summary>
@@ -117,13 +118,19 @@ namespace DNet_Hub.Hubs
 
         public async Task TaskReciever(DNet_DataContracts.Processing.Task task)
         {
-            _taskHandlerService.TaskEvaluate(task);
+            //_taskHandlerService.TaskEvaluate(task);
+
+            
 
             task.RequestedBy = Modules.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId)?.TargedModule;
 
-            var modules = Modules.Where(x => task.Context.ModuleType.Contains(x.TargedModule.ModuleType));
-            var module = modules.FirstOrDefault();
+            var modules = Modules.Where(x => task.ModuleType.Contains(x.TargedModule.ModuleType));
 
+            await this.Clients.Clients(modules.Select(x => x.ConnectionId).ToList()).SendAsync("GetMachineLoad"); //Collect all load from potential modules
+
+            //select module to process
+
+            var module = modules.FirstOrDefault();
             task.Executor = module.TargedModule;
 
             await this.Clients.Client(module.ConnectionId).SendAsync("TaskRecieve", task);
@@ -155,9 +162,9 @@ namespace DNet_Hub.Hubs
             UpdatedMachineInfo?.Invoke(Context.ConnectionId, moduleInfo);
         }
 
-        public async Task ModuleActivity(MachineSpecifications moduleInfo)
+        public async Task RecieveModuleActivity(MachineLoad machineLoad)
         {
-            UpdatedMachineInfo?.Invoke(Context.ConnectionId, moduleInfo);
+            UpdatedMachineInfo?.Invoke(Context.ConnectionId, machineLoad);
         }
 
         #endregion

@@ -9,5 +9,6 @@ namespace DNet_UI_Demonstration.Logic
 {
     public interface IUITypeEvaluateService : ITypeEvaluateService
     {
+        Task Initialize();
     }
 }

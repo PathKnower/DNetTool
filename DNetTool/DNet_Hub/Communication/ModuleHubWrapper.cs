@@ -15,6 +15,8 @@ namespace DNet_Hub.Communication
 
         public Module TargedModule { get; set; }
 
+        public MachineLoad Load { get; set; }
+
         public ModuleHubWrapper()
         {
             TargedModule = new Module();
@@ -28,13 +30,19 @@ namespace DNet_Hub.Communication
             TargedModule = new Module(id);
         }
 
-        private void ParentHub_UpdatedMachineInfo(string id, MachineSpecifications info)
+        private void ParentHub_UpdatedMachineInfo(string id, object info)
         {
             if (id != ConnectionId)
                 return;
             
-            //TODO: Rework this
-            TargedModule.ModulesHostSpecs = info;
+            
+            if(info is MachineLoad)
+            {
+                Load = info as MachineLoad;
+            }
+
+            if(info is MachineSpecifications)
+                TargedModule.ModulesHostSpecs = info as MachineSpecifications;
         }
     }
 }

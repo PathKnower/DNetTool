@@ -12,6 +12,8 @@ namespace DNet_Communication.Connection
     public interface IConnectionService : IDisposable
     {
         event ConnectionHandler SuccessfullRegister;
+        event ConnectionHandler ConnectionRestored;
+        event ConnectionHandler Disconnect;
 
         void ScheduleConnectionInitialize(TimeSpan interval, string moduleType);
 

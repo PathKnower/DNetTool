@@ -14,7 +14,7 @@ using DNet_PostgreSQL_Demonstration.DataContract;
 
 namespace DNet_PostgreSQL_Demonstration.Processing
 {
-    public class PostgreSQLDemonstrationTaskHandlerService : BaseTaskHandlerService, IPostgreSQLDemonstrationTaskHandlerService
+    public class PostgreSQLDemonstrationTaskHandlerService : BaseTaskHandlerService, IPostgreSQLDemonstrationTaskHandlerService, IDisposable
     {
         ApplicationContext _context;
 
@@ -27,7 +27,6 @@ namespace DNet_PostgreSQL_Demonstration.Processing
 
         public void Initialize()
         {
-            TaskRecieve += PostgreSQLDemonstrationTaskHandlerService_TaskRecieve;
             _connectionInstance.TaskRecieve += PostgreSQLDemonstrationTaskHandlerService_TaskRecieve;
         }
 
@@ -41,13 +40,13 @@ namespace DNet_PostgreSQL_Demonstration.Processing
         {
             Console.WriteLine("PSQL Service: " + task.Id);
 
-            if(task.Context.ModuleType.Contains(_connectionInstance.ModuleType) || task.Context.Type != DNet_DataContracts.Processing.TaskType.Search)
+            if(!task.ModuleType.Contains(_connectionInstance.ModuleType) || task.Type != DNet_DataContracts.Processing.TaskType.Search)
             {
                 await _connectionInstance.SendToHub("ModuleUnsupportTaskType", task);
                 return;
             }
 
-            SearchTaskContext context = task.Context as SearchTaskContext;
+            SearchTaskContext context = task.SearchContext;
 
             Type type = null;
             IQueryable queryable;
@@ -56,7 +55,7 @@ namespace DNet_PostgreSQL_Demonstration.Processing
             {
                 case "user":
                     type = typeof(User);
-                    queryable = _context.Users.Where(context.SearchExpression);
+                    //queryable = _context.Users.Where(context.SearchExpression);
                     break;
 
                 case "news":
@@ -74,7 +73,7 @@ namespace DNet_PostgreSQL_Demonstration.Processing
             }
 
             task.IsFinished = true;
-            task.Context.Result = "sample";
+            task.SearchContext.Result = "sample";
 
             await _connectionInstance.SendToHub("TaskResult", task);
 
@@ -84,6 +83,13 @@ namespace DNet_PostgreSQL_Demonstration.Processing
             
         }
 
+        
 
+        public void Dispose()
+        {
+            _connectionInstance.TaskRecieve -= PostgreSQLDemonstrationTaskHandlerService_TaskRecieve;
+            _context.Dispose();
+            
+        }
     }
 }

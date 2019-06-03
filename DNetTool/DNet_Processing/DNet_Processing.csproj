@@ -20,4 +20,8 @@
     <ProjectReference Include="..\DNet_Communication\DNet_Communication.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataContract\" />
+  </ItemGroup>
+
 </Project>

@@ -49,9 +49,20 @@ namespace DNet_DataContracts.Processing
         public Module Executor { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public TaskType Type { get; set; }
+
+        public string ModuleType { get; set; }
+
+        /// <summary>
         /// Task context
         /// </summary>
-        public TaskContext Context { get; set; }
+        public SearchTaskContext SearchContext { get; set; }
+
+        public ProcessingTaskContext CalculateContext { get; set; }
+
+        public DataRequestTaskContext DataRequestContext { get; set; }
 
         /// <summary>
         /// Boolean which represent that is task finished

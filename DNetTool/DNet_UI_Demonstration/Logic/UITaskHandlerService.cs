@@ -18,6 +18,8 @@ namespace DNet_UI_Demonstration.Logic
             : base(connectionInstance)
         {
             _connectionInstance.ResultRecieve += UITaskHandlerService_ResultRecieve;
+
+            _typeEvaluateService = typeEvaluateService;
         }
 
         private void UITaskHandlerService_ResultRecieve(DNet_DataContracts.Processing.Task task)
@@ -27,9 +29,35 @@ namespace DNet_UI_Demonstration.Logic
 
         public override async System.Threading.Tasks.Task SendTask(DNet_DataContracts.Processing.Task task)
         {
+            task = new DNet_DataContracts.Processing.Task
+            {
+                Id = Guid.NewGuid().ToString(),
+                Type = TaskType.Search,
+                ModuleType = "DB, DB_Postgres"
+            };
+
+            SearchTaskContext context = new SearchTaskContext
+            {
+                SearchAlias = "user",
+                ApproximateResultTypeMemoryConsumption = _typeEvaluateService.TypeMemoryConsumptionDictionary["User"]
+            };
+            task.SearchContext = context;
 
 
             await base.SendTask(task);
+        }
+
+        private void SendCalculateTask()
+        {
+            DNet_DataContracts.Processing.Task task = new DNet_DataContracts.Processing.Task
+            {
+
+            };
+
+            ProcessingTaskContext calculateTask = new ProcessingTaskContext
+            {
+                
+            };
         }
     }
 }

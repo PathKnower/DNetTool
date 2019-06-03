@@ -37,7 +37,7 @@ namespace DNet_UI_Demonstration.Logic
                 Console.WriteLine($"Task with ID: \'{task.Id}\' successfully finished");
             }
 
-            SomeThing = (string)task.Context.Result;
+            SomeThing = (string)task.SearchContext.Result;
             //throw new NotImplementedException();
         }
 
@@ -49,23 +49,20 @@ namespace DNet_UI_Demonstration.Logic
 
         internal async void SendTask()
         {
-            DNet_DataContracts.Processing.Task task = new DNet_DataContracts.Processing.Task
-            {
-                Id = Guid.NewGuid().ToString(),
-                //ExecutionEndTime = DateTime.MinValue,
-                //ExecutionStartTime = DateTime.MinValue,
-                //QueuedPushTime = DateTime.MinValue
-            };
+            //DNet_DataContracts.Processing.Task task = new DNet_DataContracts.Processing.Task
+            //{
+            //    Id = Guid.NewGuid().ToString(),
+            //    Type = TaskType.Search,
+            //    ModuleType = "DB, DB_Postgres"
+            //};
 
-            SearchTaskContext context = new SearchTaskContext
-            {
-                Type = TaskType.Search,
-                ModuleType = "DB, DB_Postgres",
-                SearchAlias = "user"
-            };
-            task.Context = context;
+            //SearchTaskContext context = new SearchTaskContext
+            //{
+            //    SearchAlias = "user"
+            //};
+            //task.SearchContext = context;
 
-            await _taskHandlerService.SendTask(task);
+            await _taskHandlerService.SendTask(null);
         }
 
     }

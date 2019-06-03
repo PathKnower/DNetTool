@@ -45,7 +45,7 @@ namespace DNet_Communication.Maintance
         };
 
 
-        public Dictionary<string, long> TypeMemoryConsumptionDictionary { get; set; }
+        public Dictionary<string, long> TypeMemoryConsumptionDictionary { get; set; } = new Dictionary<string, long>();
 
         public virtual async Task CreateApproximateTypeMemoryConsumptionTable(params Type[] types)
         {

@@ -8,12 +8,6 @@ namespace DNet_DataContracts.Processing
 {
     public class TaskContext
     {
-        public delegate void TaskEvents();
-        public event TaskEvents TaskComlete;
-
-        public string ModuleType { get; set; }
-
-        public TaskType Type { get; set; }
 
         public long ApproximateResultTypeMemoryConsumption { get; set; }
 
@@ -27,7 +21,7 @@ namespace DNet_DataContracts.Processing
         /// For demonstrate will use shared library.
         /// TODO: Use Json/XML reparsing on tartget modules
         /// </summary>
-        public object Result { get; set; }
+        public string Result { get; set; }
         
     }
 }

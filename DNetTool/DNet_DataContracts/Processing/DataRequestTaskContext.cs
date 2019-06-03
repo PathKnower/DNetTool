@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DNet_DataContracts.Processing
 {
-    class DataRequestTaskContext : TaskContext
+    public class DataRequestTaskContext : TaskContext
     {
         //TODO: define this
     }

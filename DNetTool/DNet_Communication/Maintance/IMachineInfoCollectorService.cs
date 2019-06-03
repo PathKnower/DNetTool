@@ -21,5 +21,7 @@ namespace DNet_Communication.Maintance
         CPUArchitectures GetCPUArchitecture();
 
         Task<MachineSpecifications> GetMachineInfo();
+
+        Task<MachineLoad> GetMachineLoad();
     }
 }

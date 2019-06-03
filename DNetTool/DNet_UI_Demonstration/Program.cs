@@ -1,7 +1,7 @@
 using System;
 
 using DNet_Communication.Connection;
-
+using DNet_UI_Demonstration.Logic;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -28,7 +28,10 @@ namespace DNet_UI_Demonstration
                 #region Services
 
                 var connectionService = (IConnectionService)host.Services.GetService(typeof(IConnectionService));
+                var typeEvaluateService = (IUITypeEvaluateService)host.Services.GetService(typeof(IUITypeEvaluateService));
+
                 connectionService.ScheduleConnectionInitialize(TimeSpan.FromSeconds(5), "UI_Blazor"); //initialize connection without user input
+                typeEvaluateService.Initialize();
 
                 #endregion
 

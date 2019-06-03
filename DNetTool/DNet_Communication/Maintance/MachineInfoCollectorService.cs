@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+
 using DNet_DataContracts.Maintance;
 using Microsoft.Extensions.Logging;
 
@@ -67,7 +68,6 @@ namespace DNet_Communication.Maintance
             _logger.LogInformation("GetFullRAMInfo: Get all RAM Info:\n" + result);
             return result;
         }
-        #endregion
 
         /// <summary>
         /// Get all physical RAM in MB
@@ -142,11 +142,35 @@ namespace DNet_Communication.Maintance
             else
                 cpuArchitecure = "lscpu | grep Architecture".Bash();
 
-            if (cpuArchitecure == "AMD64" || cpuArchitecure == "x86_64")
+            if (cpuArchitecure.Contains("AMD64") || cpuArchitecure.Contains("x86_64"))
                 return CPUArchitectures.x86_64;
 
             return CPUArchitectures.x86;
         }
+
+        /// <summary>
+        /// Get CPU load
+        /// </summary>
+        /// <returns></returns>
+        public double GetCPULoad()
+        {
+            string cpuload;
+            if (_currentPlatform == PlatformID.Win32NT)
+            {
+                cpuload = "gwmi win32_processor | select LoadPercentage  |fl".PowerShell();
+                cpuload = cpuload.Split(':')[1];
+            }
+            else
+            {
+                cpuload = "grep \'cpu \' /proc/stat | awk \'{usage=($2+$4)*100/($2+$4+$5)} END {print usage}\'".Bash();
+            }
+
+            if (double.TryParse(cpuload, out double result))
+                return result;
+            return -1;
+        }
+
+        #endregion
 
 
         /// <summary>
@@ -159,7 +183,7 @@ namespace DNet_Communication.Maintance
                 _machineInfo = new MachineSpecifications();
 
             _machineInfo.AllMemory = GetTotalRAM();
-            _machineInfo.AvailableMemory = GetFreeRAM();
+            //_machineInfo.AvailableMemory = GetFreeRAM();
 
             _machineInfo.CPUClock = GetCPUClock();
             _machineInfo.CPUCores = Environment.ProcessorCount;
@@ -168,6 +192,18 @@ namespace DNet_Communication.Maintance
             _machineInfo.CalculatePerformancePoints();
 
             return _machineInfo;
+        }
+
+        public async Task<MachineLoad> GetMachineLoad()
+        {
+            MachineLoad load = new MachineLoad
+            {
+                CPULoad = GetCPULoad(),
+                MemoryLoad = 100.0 - (GetFreeRAM()/
+                (_machineInfo.AllMemory / 100.0))
+            };
+
+            return load;
         }
 
         #region Disposing
@@ -185,6 +221,7 @@ namespace DNet_Communication.Maintance
         {
             // nothing to do
         }
+
 
         #endregion
     }

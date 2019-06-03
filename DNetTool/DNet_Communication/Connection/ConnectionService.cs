@@ -36,28 +36,38 @@ namespace DNet_Communication.Connection
         {
             _connectionTimer = new Timer
             {
-                AutoReset = false, //trigger only once
+                AutoReset = false, //trigger only once 
                 Interval = interval.TotalMilliseconds
             };
 
-            _connectionTimer.Elapsed += _connectionTimer_Elapsed;
+            _connectionTimer.Elapsed += _connectionTimer_InitialConnect;
             _currentModuleType = moduleType;
 
             _connectionTimer.Start();
         }
 
-        private void _connectionTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void _connectionTimer_InitialConnect(object sender, ElapsedEventArgs e)
         {
             if(!_connectionInstance.IsConnected)
             {
                 ConnectToHub().Wait();
+
+                if (_connectionInstance.IsConnected)
+                {
+                    _connectionTimer.Stop();
+                    _connectionTimer.Dispose();
+                    _connectionTimer = null;
+                }
+                else
+                    _connectionTimer.Start();
             }
         }
 
         #region Events 
 
         public event ConnectionHandler SuccessfullRegister;
-
+        public event ConnectionHandler ConnectionRestored;
+        public event ConnectionHandler Disconnect;
 
         private void _connectionInstance_SuccessfullRegister(string HubGUID)
         {
@@ -73,7 +83,38 @@ namespace DNet_Communication.Connection
 
         private void _connectionInstance_Disconnect(string HubGUID)
         {
-            //throw new NotImplementedException();
+            Disconnect?.Invoke(HubGUID);
+
+            _logger.LogWarning("Disconnected from hub: \'{0}\'. Initialize reconnection timer.", HubGUID);
+
+            if(_connectionTimer == null)
+            {
+                _connectionTimer = new Timer
+                {
+                    Interval = TimeSpan.FromSeconds(5).TotalMilliseconds,
+                    AutoReset = true,
+                    Enabled = true
+                };
+
+                _connectionTimer.Elapsed += _connectionTimer_Reconnect;
+
+                _connectionTimer.Start();
+            }
+        }
+
+        private void _connectionTimer_Reconnect(object sender, ElapsedEventArgs e)
+        {
+            if (!_connectionInstance.IsConnected)
+            {
+                ConnectToHub().Wait();
+
+                if (_connectionInstance.IsConnected)
+                {
+                    _connectionTimer.Stop();
+                    _connectionTimer.Dispose();
+                    _connectionTimer = null;
+                }
+            }
         }
 
         #endregion
@@ -82,20 +123,24 @@ namespace DNet_Communication.Connection
 
         private async Task ConnectToHub()
         {
-            if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"], _currentModuleType))
+            try
             {
-                _logger.LogInformation($"Successfully connected to Primary Hub which located on: {_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"]}");
-                //Console.WriteLine("Connected to first hub");
+                if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"], _currentModuleType))
+                {
+                    _logger.LogInformation($"Successfully connected to Primary Hub which located on: {_configuration.GetSection("ConnectionInfo")["PrimaryHubUri"]}");
+                    //Console.WriteLine("Connected to first hub");
+                }
+                else if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"], _currentModuleType))
+                {
+                    _logger.LogInformation($"Successfully connected to Secondary Hub which located on: {_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"]}");
+                    //Console.WriteLine("Connected to second hub");
+                }
             }
-            else if (await _connectionInstance.Connect(_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"], _currentModuleType))
-            {
-                _logger.LogInformation($"Successfully connected to Secondary Hub which located on: {_configuration.GetSection("ConnectionInfo")["SecondaryHubUri"]}");
-                //Console.WriteLine("Connected to second hub");
-            }
-            else
+            catch(Exception e)
             {
                 _logger.LogCritical("Could not connect to any hub, looking for available hubs in network"); //TODO: Make this feature
             }
+           
         }
 
         public void Dispose()

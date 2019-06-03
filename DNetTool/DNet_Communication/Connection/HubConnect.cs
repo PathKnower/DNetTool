@@ -10,6 +10,7 @@ using DNet_DataContracts.Maintance;
 using DNet_Communication.Maintance;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Timers;
 
 namespace DNet_Communication.Connection
 {
@@ -20,11 +21,13 @@ namespace DNet_Communication.Connection
         private IMachineInfoCollectorService _serviceCollector;
         private bool _disposed;
 
-        private string _moduleType = string.Empty;
+        private Timer _moduleLoadNotificationTimer;
 
+        private string _moduleType = string.Empty;
         private string _hubGuid = string.Empty;
 
-        HubConnection _hubConnection;
+        private HubConnection _hubConnection;
+
 
         public HubConnect(ILogger<HubConnect> logger, IMachineInfoCollectorService serviceCollector)
         {
@@ -32,7 +35,7 @@ namespace DNet_Communication.Connection
             _serviceCollector = serviceCollector;
         }
 
-        async Task Initialize(string connectionUri)
+        private async Task Initialize(string connectionUri)
         {
             _connectURI = connectionUri;
 
@@ -52,13 +55,14 @@ namespace DNet_Communication.Connection
             _hubConnection.On("CollectMachineInfo", GetMachineInfo);
             _hubConnection.On("UpdateMachineLoad", GetMachineLoad);
 
-            await _hubConnection.StartAsync();
+            _moduleLoadNotificationTimer = new Timer(TimeSpan.FromSeconds(30).TotalMilliseconds)
+            {
+                AutoReset = true
+            };
+            _moduleLoadNotificationTimer.Elapsed += _moduleLoadNotificationTimer_Elapsed;
         }
 
-        private async Task HubConnection_Closed(Exception arg)
-        {
-            Disconnect?.Invoke(_hubGuid);
-        }
+
 
         #region RegisterModule logic
 
@@ -67,11 +71,11 @@ namespace DNet_Communication.Connection
             try
             {
                 _moduleType = moduleType;
-                await _hubConnection.InvokeAsync("RegisterModule", moduleType);
+                await _hubConnection.InvokeAsync("RegisterModule", _moduleType);
             }
             catch(Exception e)
             {
-                _logger.LogError(e, $"Connect: Error occure the register module. Module type = {moduleType}");
+                _logger.LogError(e, $"Connect: Error occure the register module. Module type = {_moduleType}");
             }
         }
 
@@ -81,6 +85,7 @@ namespace DNet_Communication.Connection
             {
                 _hubGuid = hubGuid;
                 SuccessfullRegister?.Invoke(_hubGuid);
+                _moduleLoadNotificationTimer.Start();
                 return;
             }
             else
@@ -96,7 +101,12 @@ namespace DNet_Communication.Connection
 
         private async void GetMachineInfo() => await CollectMachineInfo();
 
-        private async void GetMachineLoad() => await UpdateMachineLoad();
+        private async void GetMachineLoad()
+        {
+            _moduleLoadNotificationTimer.Stop(); 
+            await UpdateMachineLoad(); //refresh timer after manual call 
+            _moduleLoadNotificationTimer.Start();
+        }
 
         private async void OnTaskRecieve(DNet_DataContracts.Processing.Task task)
         {
@@ -110,6 +120,7 @@ namespace DNet_Communication.Connection
             _logger.LogInformation("Recieve result of task. Task ID: \'{0}\' ", task.Id);
             ResultRecieve?.Invoke(task);
         }
+
 
         #endregion
 
@@ -132,13 +143,12 @@ namespace DNet_Communication.Connection
             if (_hubConnection == null)
                 await Initialize(connectionUri);
 
+            await _hubConnection.StartAsync();
+
             await Register(moduleType);
 
-            return true;
+            return IsConnected;
         }
-
-
-
 
         public async Task<bool> SendToHub(string methodName, object arg)
         {
@@ -153,9 +163,6 @@ namespace DNet_Communication.Connection
 
             return true;
         }
-
-
-
 
         public async Task CollectMachineInfo()
         {
@@ -175,17 +182,31 @@ namespace DNet_Communication.Connection
         {
             try
             {
-                //TODO: work with this
+                MachineLoad load = await _serviceCollector.GetMachineLoad();
+                await _hubConnection.InvokeAsync("RecieveModuleActivity", load);
             }
             catch(Exception e)
             {
-
+                _logger.LogError(e, "Connect: Error occure collect machine load.");
             }
+        }
+
+
+
+        private async Task HubConnection_Closed(Exception arg)
+        {
+            Disconnect?.Invoke(_hubGuid);
+            _moduleLoadNotificationTimer.Stop();
         }
 
         #endregion
 
         #region Helpers
+
+        private void _moduleLoadNotificationTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            UpdateMachineLoad();
+        }
 
         private void CheckConnectionURI(ref string uri)
         {
