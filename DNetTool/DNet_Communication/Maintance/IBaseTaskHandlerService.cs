@@ -15,6 +15,7 @@ namespace DNet_Communication.Maintance
     {
 
         event TaskTransmitHandler TaskRecieve;
+        event TaskTransmitHandler ResultRecieve;
 
         /// <summary>
         /// 

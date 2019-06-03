@@ -32,13 +32,23 @@ namespace DNet_Communication.Maintance
             _currentTasks = new List<DNet_DataContracts.Processing.Task>();
 
             _connectionInstance.TaskRecieve += TaskRecieve;
-            TaskRecieve += TaskRecieved;
+            _connectionInstance.ResultRecieve += ResultRecieve;
+            //TaskRecieve += TaskRecieved;
+            //ResultRecieve += BaseTaskHandlerService_ResultRecieve;
         }
+
+        
 
 
         #region Interface impl
 
         public event TaskTransmitHandler TaskRecieve;
+        public event TaskTransmitHandler ResultRecieve;
+
+        private void BaseTaskHandlerService_ResultRecieve(DNet_DataContracts.Processing.Task task)
+        {
+            
+        }
 
         protected async void TaskRecieved(DNet_DataContracts.Processing.Task task)
         {

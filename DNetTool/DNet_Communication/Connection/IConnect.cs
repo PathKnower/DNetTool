@@ -18,6 +18,7 @@ namespace DNet_Communication.Connection
         event ConnectionHandler Disconnect;
 
         event TaskTransmitHandler TaskRecieve;
+        event TaskTransmitHandler ResultRecieve;
 
         bool IsConnected { get; }
 

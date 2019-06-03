@@ -28,13 +28,12 @@ namespace DNet_PostgreSQL_Demonstration.Processing
         public void Initialize()
         {
             TaskRecieve += PostgreSQLDemonstrationTaskHandlerService_TaskRecieve;
-            _connectionInstance.TaskRecieve += _connectionInstance_TaskRecieve;
+            _connectionInstance.TaskRecieve += PostgreSQLDemonstrationTaskHandlerService_TaskRecieve;
         }
 
         private void _connectionInstance_TaskRecieve(DNet_DataContracts.Processing.Task task)
         {
             //throw new NotImplementedException();
-
             Console.WriteLine("PSQL 11 Service: " + task.Id);
         }
 
@@ -74,12 +73,15 @@ namespace DNet_PostgreSQL_Demonstration.Processing
                 return;
             }
 
+            task.IsFinished = true;
+            task.Context.Result = "sample";
+
+            await _connectionInstance.SendToHub("TaskResult", task);
+
             //ParameterExpression usedType = Expression.Parameter(type, context.SearchAlias);
 
             //LambdaExpression e = DynamicExpressionParser.ParseLambda(new ParameterExpression[] { usedType }, null, context.SearchExpression);
             
-
-
         }
 
 

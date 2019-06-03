@@ -47,6 +47,7 @@ namespace DNet_Communication.Connection
             _hubConnection.On<string, string>("OnRegister", OnRegister);
 
             _hubConnection.On<DNet_DataContracts.Processing.Task>("TaskRecieve", OnTaskRecieve);
+            _hubConnection.On<DNet_DataContracts.Processing.Task>("ResultRecieve", OnResultRecieve);
 
             _hubConnection.On("CollectMachineInfo", GetMachineInfo);
             _hubConnection.On("UpdateMachineLoad", GetMachineLoad);
@@ -99,7 +100,15 @@ namespace DNet_Communication.Connection
 
         private async void OnTaskRecieve(DNet_DataContracts.Processing.Task task)
         {
+            _logger.LogInformation("Recieve new task. Task ID: \'{0}\' ", task.Id);
             TaskRecieve?.Invoke(task); //TODO: if there is no subscribers, create a new one or send a callback
+        }
+
+
+        private async void OnResultRecieve(DNet_DataContracts.Processing.Task task)
+        {
+            _logger.LogInformation("Recieve result of task. Task ID: \'{0}\' ", task.Id);
+            ResultRecieve?.Invoke(task);
         }
 
         #endregion
@@ -110,6 +119,7 @@ namespace DNet_Communication.Connection
         public event ConnectionHandler ConnectionRestored;
         public event ConnectionHandler Disconnect;
         public event TaskTransmitHandler TaskRecieve;
+        public event TaskTransmitHandler ResultRecieve;
 
         public bool IsConnected { get { return _hubConnection?.State == HubConnectionState.Connected;} }
 

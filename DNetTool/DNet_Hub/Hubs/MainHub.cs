@@ -118,6 +118,21 @@ namespace DNet_Hub.Hubs
         public async Task TaskReciever(DNet_DataContracts.Processing.Task task)
         {
             _taskHandlerService.TaskEvaluate(task);
+
+            task.RequestedBy = Modules.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId)?.TargedModule;
+
+            var modules = Modules.Where(x => task.Context.ModuleType.Contains(x.TargedModule.ModuleType));
+            var module = modules.FirstOrDefault();
+
+            task.Executor = module.TargedModule;
+
+            await this.Clients.Client(module.ConnectionId).SendAsync("TaskRecieve", task);
+        }
+
+        public async Task TaskResult(DNet_DataContracts.Processing.Task task)
+        {
+            _logger.LogDebug($"Task with ID: \'{task.Id}\' successfully finished");
+            await this.Clients.Client(task.RequestedBy.ConnectionID).SendAsync("ResultRecieve", task);
         }
 
         public async Task ModuleUnsupportTaskType(DNet_DataContracts.Processing.Task task)

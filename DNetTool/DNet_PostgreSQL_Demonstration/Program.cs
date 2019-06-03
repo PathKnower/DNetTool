@@ -72,10 +72,8 @@ namespace DNet_PostgreSQL_Demonstration
                 {
                     options.UseStartup<Startup>();
                     options.UseNLog();
+                    options.UseUrls("http://localhost:46843");
                 });
-            //builder.UseConfiguration(new ConfigurationBuilder()
-            //    .AddCommandLine(args)
-            //    .Build());
 
             return builder;
         }

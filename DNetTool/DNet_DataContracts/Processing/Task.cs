@@ -21,17 +21,17 @@ namespace DNet_DataContracts.Processing
         /// <summary>
         /// Time when task is begin executing by Module
         /// </summary>
-        public DateTime ExecutionStartTime { get; set; }
+        //public DateTime ExecutionStartTime { get; set; }
 
         /// <summary>
         /// Time when task ends execution by any reason
         /// </summary>
-        public DateTime ExecutionEndTime { get; set; }
+        //public DateTime ExecutionEndTime { get; set; }
 
         /// <summary>
         /// Time when task was pushed to the queue
         /// </summary>
-        public DateTime QueuedPushTime { get; set; }
+        //public DateTime QueuedPushTime { get; set; }
 
         /// <summary>
         /// Recommended performance points for this tasks

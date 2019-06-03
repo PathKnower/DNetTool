@@ -27,7 +27,18 @@ namespace DNet_UI_Demonstration.Logic
             base.OnInit();
 
             _taskHandlerService.TaskRecieve += _taskHandlerService_TaskRecieve;
+            _taskHandlerService.ResultRecieve += _taskHandlerService_ResultRecieve;
+        }
 
+        private void _taskHandlerService_ResultRecieve(DNet_DataContracts.Processing.Task task)
+        {
+            if(task.IsFinished)
+            {
+                Console.WriteLine($"Task with ID: \'{task.Id}\' successfully finished");
+            }
+
+            SomeThing = (string)task.Context.Result;
+            //throw new NotImplementedException();
         }
 
         private void _taskHandlerService_TaskRecieve(DNet_DataContracts.Processing.Task task)
@@ -40,13 +51,17 @@ namespace DNet_UI_Demonstration.Logic
         {
             DNet_DataContracts.Processing.Task task = new DNet_DataContracts.Processing.Task
             {
-                Id = Guid.NewGuid().ToString()
+                Id = Guid.NewGuid().ToString(),
+                //ExecutionEndTime = DateTime.MinValue,
+                //ExecutionStartTime = DateTime.MinValue,
+                //QueuedPushTime = DateTime.MinValue
             };
 
-            TaskContext context = new TaskContext
+            SearchTaskContext context = new SearchTaskContext
             {
-                Type = TaskType.DataRequest
-                
+                Type = TaskType.Search,
+                ModuleType = "DB, DB_Postgres",
+                SearchAlias = "user"
             };
             task.Context = context;
 
