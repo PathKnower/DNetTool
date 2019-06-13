@@ -34,7 +34,6 @@ namespace DNet_UI_Demonstration
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
 
             services.AddSingleton(provider => Configuration); //Add config to DI
             services.AddSingleton<IMachineInfoCollectorService, MachineInfoCollectorService>();

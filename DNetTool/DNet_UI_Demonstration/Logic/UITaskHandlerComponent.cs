@@ -15,7 +15,7 @@ namespace DNet_UI_Demonstration.Logic
 
         internal string HubGUID;
 
-        internal string SomeThing;
+        internal string SomeThing = string.Empty;
 
         public UITaskHandlerComponent()
         {

@@ -19,24 +19,9 @@ namespace DNet_DataContracts.Processing
         public string Id { get; set; }
 
         /// <summary>
-        /// Time when task is begin executing by Module
-        /// </summary>
-        //public DateTime ExecutionStartTime { get; set; }
-
-        /// <summary>
-        /// Time when task ends execution by any reason
-        /// </summary>
-        //public DateTime ExecutionEndTime { get; set; }
-
-        /// <summary>
-        /// Time when task was pushed to the queue
-        /// </summary>
-        //public DateTime QueuedPushTime { get; set; }
-
-        /// <summary>
         /// Recommended performance points for this tasks
         /// </summary>
-        public int PerformancePoints;
+        public int PerformancePoints { get; set; }
 
         /// <summary>
         /// Task requester
@@ -53,7 +38,15 @@ namespace DNet_DataContracts.Processing
         /// </summary>
         public TaskType Type { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string ModuleType { get; set; }
+
+        /// <summary>
+        /// Using JSON for further interpretation
+        /// </summary>
+        public string CustomContext { get; set; }
 
         /// <summary>
         /// Task context
@@ -63,6 +56,9 @@ namespace DNet_DataContracts.Processing
         public ProcessingTaskContext CalculateContext { get; set; }
 
         public DataRequestTaskContext DataRequestContext { get; set; }
+
+
+        public Action TestAction { get; set; }
 
         /// <summary>
         /// Boolean which represent that is task finished

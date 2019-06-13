@@ -24,7 +24,7 @@ namespace DNet_Communication.Maintance
         /// Create a table of type memory consuption
         /// </summary>
         /// <returns></returns>
-        Task CreateApproximateTypeMemoryConsumptionTable(params Type[] types);
+        Task CreateApproximateTypeMemoryConsumptionDictionary(params Type[] types);
 
     }
 }

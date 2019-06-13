@@ -55,7 +55,7 @@ namespace DNet_Processing
             var builder = WebHost.CreateDefaultBuilder(args);
 
             builder.UseStartup<Startup>();
-            //builder.UseUrls("http://*:39753;http://*:39853");
+            builder.UseUrls("http://*:34684");
             builder.UseNLog();
 
             return builder.Build();

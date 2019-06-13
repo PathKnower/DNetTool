@@ -24,49 +24,64 @@ namespace DNet_UI_Demonstration.Logic
 
         }
 
-        public override async Task CreateApproximateTypeMemoryConsumptionTable(params Type[] types)
+        public override async Task CreateApproximateTypeMemoryConsumptionDictionary(params Type[] types)
         {
-
             foreach(Type type in types)
             {
+                if (TypeMemoryConsumptionDictionary.ContainsKey(type.Name))
+                    continue;
+
                 IEnumerable<FieldInfo> allFieldFromType = type.GetRuntimeFields();
 
                 long aproximateMemoryConsumption = 0;
 
+                //вычисление размера блока памяти
                 int clusterSize = (Environment.Is64BitOperatingSystem ? MemoryConsumptionByRefernceForClassIn32BitSystem * 2 : MemoryConsumptionByRefernceForClassIn32BitSystem);
 
                 if (type.IsClass)
                 {
+                    //прибавляем выделенное пространство под класс
                     aproximateMemoryConsumption = MemoryConsumptionForEmptyClass;
-                    aproximateMemoryConsumption += clusterSize;
+                    // прибавляем вес ссылки в битах (По умолчанию равен размеру блока памяти)
+                    aproximateMemoryConsumption += clusterSize; 
                 }
                 else
                     aproximateMemoryConsumption = MemoryConsumptionForEmptyStruct;
 
-                foreach(FieldInfo field in allFieldFromType)
+                // Проход по всем полям
+                foreach (FieldInfo field in allFieldFromType) 
                 {
+                    //Если сущность поля базовая
                     if(BaseTypeMemoryConsumptionTable.TryGetValue(field.FieldType.ToString(), out int memoryConsumptionInBits))
-                    {
+                    { // то прибавляем необходимое значение
                         aproximateMemoryConsumption += memoryConsumptionInBits; 
                     }
                     else
-                    {
-                        aproximateMemoryConsumption += clusterSize; //mean that this fiels - is class
+                    { //иначе оцениваем сущность поля
+                        // Ждём оценки сущности поля
+                        //await CreateApproximateTypeMemoryConsumptionDictionary(field.FieldType);
+                        //если оценка прошла успешно
+                        if (TypeMemoryConsumptionDictionary.TryGetValue(field.FieldType.ToString(), out long fieldTypeMemoryConsmption))
+                            //то прибавляем оценку сущности поля к оценке текущей сущности
+                            aproximateMemoryConsumption += fieldTypeMemoryConsmption;
+                        else
+                            //иначе прибавляем размер ссылки
+                            aproximateMemoryConsumption += clusterSize;
                     }
                 }
-
-                if (aproximateMemoryConsumption % clusterSize != 0) // equality to stack size 
+                // Выравниваем по размеру блока
+                if (aproximateMemoryConsumption % clusterSize != 0) 
                 {
                     aproximateMemoryConsumption += Math.Abs(clusterSize - (aproximateMemoryConsumption % clusterSize));
                 }
-
-                TypeMemoryConsumptionDictionary.Add(type.Name, aproximateMemoryConsumption);
+                //добавляем в словарь
+                TypeMemoryConsumptionDictionary.Add(type.Name, aproximateMemoryConsumption); 
             }
         }
 
         public async Task Initialize()
         {
-            await CreateApproximateTypeMemoryConsumptionTable(typeof(User), typeof(News));
+            await CreateApproximateTypeMemoryConsumptionDictionary(typeof(User), typeof(News));
         }
     }
 }

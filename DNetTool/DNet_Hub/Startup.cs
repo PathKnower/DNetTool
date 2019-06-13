@@ -34,6 +34,7 @@ namespace DNet_Hub
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             services.AddScoped<ITaskHandlerService, TaskHandlerService>();
+            services.AddScoped<ILoadBalancerService, LoadBalancerService>();
 
             services.AddSignalR().AddHubOptions<MainHub>(options =>
             { 

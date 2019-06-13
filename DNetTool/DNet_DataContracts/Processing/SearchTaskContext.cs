@@ -11,7 +11,7 @@ namespace DNet_DataContracts.Processing
         /// <summary>
         /// Approximate area of search, help to detect type
         /// </summary>
-        public string SearchAlias { get; set; }
+        public string SearchArea { get; set; }
 
         /// <summary>
         /// Search filer. Use System.Linq.Dynamic.Core for parse

@@ -183,7 +183,6 @@ namespace DNet_Communication.Maintance
                 _machineInfo = new MachineSpecifications();
 
             _machineInfo.AllMemory = GetTotalRAM();
-            //_machineInfo.AvailableMemory = GetFreeRAM();
 
             _machineInfo.CPUClock = GetCPUClock();
             _machineInfo.CPUCores = Environment.ProcessorCount;

@@ -67,8 +67,8 @@ namespace DNet_DataContracts.Maintance
             double coefficent = CPUPower / AllMemory; //coefficent of CPU performancing 
             if (coefficent < 1 && CPUPower < 8000) //if CPU power less than 8000, then add some PP due the RAM 
             {
-                coefficent = CPUPower % AllMemory;
-                PerformancePoint = CPUPower + (long)(AllMemory * coefficent);
+                coefficent = 100.0 - (CPUPower /(AllMemory / 100.0)); 
+                PerformancePoint = CPUPower + (long)(AllMemory * (coefficent / 100.0));
             }
             else
                 PerformancePoint = CPUPower + AllMemory;

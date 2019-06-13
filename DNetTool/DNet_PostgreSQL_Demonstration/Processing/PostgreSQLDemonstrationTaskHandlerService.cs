@@ -51,7 +51,7 @@ namespace DNet_PostgreSQL_Demonstration.Processing
             Type type = null;
             IQueryable queryable;
 
-            switch(context.SearchAlias)
+            switch(context.SearchArea)
             {
                 case "user":
                     type = typeof(User);

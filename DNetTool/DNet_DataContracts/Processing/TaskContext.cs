@@ -13,11 +13,6 @@ namespace DNet_DataContracts.Processing
 
 
         /// <summary>
-        /// Payload of the action. 
-        /// </summary>
-        public object Payload { get; set; }
-
-        /// <summary>
         /// For demonstrate will use shared library.
         /// TODO: Use Json/XML reparsing on tartget modules
         /// </summary>

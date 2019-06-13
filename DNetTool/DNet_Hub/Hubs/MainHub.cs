@@ -23,12 +23,14 @@ namespace DNet_Hub.Hubs
 
         private ILogger<MainHub> _logger;
         private ITaskHandlerService _taskHandlerService;
+        private ILoadBalancerService _loadBalancerService;
 
 
-        public MainHub(ILogger<MainHub> logger, ITaskHandlerService taskHandlerService)
+        public MainHub(ILogger<MainHub> logger, ITaskHandlerService taskHandlerService, ILoadBalancerService loadBalancerService)
         {
             _logger = logger;
             _taskHandlerService = taskHandlerService;
+            _loadBalancerService = loadBalancerService;
 
             if(string.IsNullOrEmpty(HubGUID))
             {
@@ -120,13 +122,16 @@ namespace DNet_Hub.Hubs
         {
             //_taskHandlerService.TaskEvaluate(task);
 
-            
 
             task.RequestedBy = Modules.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId)?.TargedModule;
 
             var modules = Modules.Where(x => task.ModuleType.Contains(x.TargedModule.ModuleType));
 
             await this.Clients.Clients(modules.Select(x => x.ConnectionId).ToList()).SendAsync("GetMachineLoad"); //Collect all load from potential modules
+
+            //end this function here
+
+            await _loadBalancerService.SelectTargetModule();
 
             //select module to process
 

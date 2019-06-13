@@ -13,11 +13,14 @@ namespace DNet_Processing.Processing
             base (connectionInstance)
         {
             TaskRecieve += ProcessingModuleDemontrationTaskHandler_TaskRecieve;
+            _connectionInstance.TaskRecieve += ProcessingModuleDemontrationTaskHandler_TaskRecieve;
         }
 
         private void ProcessingModuleDemontrationTaskHandler_TaskRecieve(DNet_DataContracts.Processing.Task task)
         {
             Console.WriteLine(task.Id);
+
+            task.TestAction.Invoke();
         }
     }
 }
