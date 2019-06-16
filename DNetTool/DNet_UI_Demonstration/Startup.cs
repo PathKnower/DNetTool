@@ -37,7 +37,11 @@ namespace DNet_UI_Demonstration
 
             services.AddSingleton(provider => Configuration); //Add config to DI
             services.AddSingleton<IMachineInfoCollectorService, MachineInfoCollectorService>();
-            services.AddSingleton<IConnect, HubConnect>();
+
+            //register twice due the backward compatibility
+            services.AddSingleton<IUIConnect, UIConnect>();
+            services.AddSingleton<IConnect, UIConnect>();
+
             services.AddSingleton<IConnectionService, ConnectionService>();
             services.AddSingleton<IUITypeEvaluateService, UITypeEvaluateService>();
             services.AddSingleton<IUITaskHandlerService, UITaskHandlerService>();

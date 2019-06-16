@@ -176,6 +176,11 @@ namespace DNet_Hub.Hubs
 
         #region Helpers
 
+        public async Task ShareModuleInfo()
+        {
+            await this.Clients.Caller.SendAsync("RecieveModuleInfo", Modules);
+        }
+
         //TODO: Set IP adress to module
 
         #endregion

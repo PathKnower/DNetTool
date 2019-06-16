@@ -16,17 +16,17 @@ namespace DNet_Communication.Connection
 {
     public class HubConnect : IConnect
     {
-        private readonly ILogger<HubConnect> _logger;
-        private string _connectURI;
-        private IMachineInfoCollectorService _serviceCollector;
-        private bool _disposed;
+        protected readonly ILogger<HubConnect> _logger;
+        protected string _connectURI;
+        protected IMachineInfoCollectorService _serviceCollector;
+        protected bool _disposed;
 
-        private Timer _moduleLoadNotificationTimer;
+        protected Timer _moduleLoadNotificationTimer;
 
-        private string _moduleType = string.Empty;
-        private string _hubGuid = string.Empty;
+        protected string _moduleType = string.Empty;
+        protected string _hubGuid = string.Empty;
 
-        private HubConnection _hubConnection;
+        protected HubConnection _hubConnection;
 
 
         public HubConnect(ILogger<HubConnect> logger, IMachineInfoCollectorService serviceCollector)
@@ -35,7 +35,7 @@ namespace DNet_Communication.Connection
             _serviceCollector = serviceCollector;
         }
 
-        private async Task Initialize(string connectionUri)
+        protected virtual async Task Initialize(string connectionUri)
         {
             _connectURI = connectionUri;
 
@@ -66,7 +66,7 @@ namespace DNet_Communication.Connection
 
         #region RegisterModule logic
 
-        public async Task Register(string moduleType)
+        public virtual async Task Register(string moduleType)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace DNet_Communication.Connection
             }
         }
 
-        private async void OnRegister(string result, string hubGuid)
+        protected virtual async void OnRegister(string result, string hubGuid)
         {
             if (result == "Ok")
             {
@@ -99,27 +99,28 @@ namespace DNet_Communication.Connection
 
         #region Server handlers
 
-        private async void GetMachineInfo() => await CollectMachineInfo();
+        protected virtual async void GetMachineInfo() => await CollectMachineInfo();
 
-        private async void GetMachineLoad()
+        protected virtual async void GetMachineLoad()
         {
             _moduleLoadNotificationTimer.Stop(); 
             await UpdateMachineLoad(); //refresh timer after manual call 
             _moduleLoadNotificationTimer.Start();
         }
 
-        private async void OnTaskRecieve(DNet_DataContracts.Processing.Task task)
+        protected virtual async void OnTaskRecieve(DNet_DataContracts.Processing.Task task)
         {
             _logger.LogInformation("Recieve new task. Task ID: \'{0}\' ", task.Id);
             TaskRecieve?.Invoke(task); //TODO: if there is no subscribers, create a new one or send a callback
         }
 
 
-        private async void OnResultRecieve(DNet_DataContracts.Processing.Task task)
+        protected virtual async void OnResultRecieve(DNet_DataContracts.Processing.Task task)
         {
             _logger.LogInformation("Recieve result of task. Task ID: \'{0}\' ", task.Id);
             ResultRecieve?.Invoke(task);
         }
+
 
 
         #endregion
@@ -138,7 +139,7 @@ namespace DNet_Communication.Connection
 
         public string ModuleType { get { return _moduleType; } }
 
-        public async Task<bool> Connect(string connectionUri, string moduleType)
+        public virtual async Task<bool> Connect(string connectionUri, string moduleType)
         {
             if (_hubConnection == null)
                 await Initialize(connectionUri);
@@ -150,7 +151,7 @@ namespace DNet_Communication.Connection
             return IsConnected;
         }
 
-        public async Task<bool> SendToHub(string methodName, object arg)
+        public virtual async Task<bool> SendToHub(string methodName, object arg)
         {
             if(!IsConnected)
             {
@@ -164,7 +165,7 @@ namespace DNet_Communication.Connection
             return true;
         }
 
-        public async Task CollectMachineInfo()
+        public virtual async Task CollectMachineInfo()
         {
             try
             {
@@ -178,7 +179,7 @@ namespace DNet_Communication.Connection
         }
 
 
-        public async Task UpdateMachineLoad()
+        public virtual async Task UpdateMachineLoad()
         {
             try
             {
@@ -193,7 +194,7 @@ namespace DNet_Communication.Connection
 
 
 
-        private async Task HubConnection_Closed(Exception arg)
+        protected virtual async Task HubConnection_Closed(Exception arg)
         {
             Disconnect?.Invoke(_hubGuid);
             _moduleLoadNotificationTimer.Stop();
@@ -203,12 +204,12 @@ namespace DNet_Communication.Connection
 
         #region Helpers
 
-        private void _moduleLoadNotificationTimer_Elapsed(object sender, ElapsedEventArgs e)
+        protected void _moduleLoadNotificationTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             UpdateMachineLoad();
         }
 
-        private void CheckConnectionURI(ref string uri)
+        protected virtual void CheckConnectionURI(ref string uri)
         {
             uri = uri.Replace(" ", ""); //remove all spaces
 
@@ -219,7 +220,7 @@ namespace DNet_Communication.Connection
             //if uri has ports, do nothing
         }
 
-        private static string GetCallerName([CallerMemberName]string name = "")
+        protected static string GetCallerName([CallerMemberName]string name = "")
         {
             return name + " Action:";
         }
