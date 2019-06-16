@@ -55,6 +55,13 @@ namespace DNet_Communication.Connection
         Task<bool> SendToHub(string methodName, object arg);
 
         /// <summary>
+        /// Simple request to hub function without params
+        /// </summary>
+        /// <param name="methodName"></param>
+        /// <returns></returns>
+        Task HubRequest(string methodName);
+
+        /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>

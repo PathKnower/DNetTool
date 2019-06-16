@@ -202,6 +202,8 @@ namespace DNet_Communication.Maintance
                 (_machineInfo.AllMemory / 100.0))
             };
 
+            load.MemoryLoad = Math.Round(load.MemoryLoad, 1);
+
             return load;
         }
 

@@ -13,7 +13,6 @@ namespace DNet_UI_Demonstration.Logic
 {
     public class UIConnect : HubConnect, IUIConnect
     {
-
         public UIConnect(ILogger<HubConnect> logger, IMachineInfoCollectorService serviceCollector) : base(logger, serviceCollector)
         {
         }
@@ -37,6 +36,7 @@ namespace DNet_UI_Demonstration.Logic
 
         protected virtual async void RecieveModuleInfo(ModuleWrapper[] modules)
         {
+            //_logger.LogDebug("Info is coming!");
             ModuleInfoRecieved?.Invoke(modules);
         }
     }

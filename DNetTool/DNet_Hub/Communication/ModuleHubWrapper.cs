@@ -20,29 +20,34 @@ namespace DNet_Hub.Communication
         public ModuleHubWrapper()
         {
             TargedModule = new Module();
+            Load = new MachineLoad();
         }
 
         public ModuleHubWrapper(string id, MainHub parentHub)
         {
             ConnectionId = id;
-            parentHub.UpdatedMachineInfo += ParentHub_UpdatedMachineInfo;
+            MainHub.UpdatedMachineInfo += ParentHub_UpdatedMachineInfo;
+            MainHub.UpdateMachineLoad += ParentHub_UpdateMachineLoad;
 
             TargedModule = new Module(id);
+            Load = new MachineLoad();
         }
 
-        private void ParentHub_UpdatedMachineInfo(string id, object info)
+        private void ParentHub_UpdateMachineLoad(string id, MachineLoad info)
+        {
+            if (id != ConnectionId)
+                    return;
+
+            Load = info;
+        }
+
+        private void ParentHub_UpdatedMachineInfo(string id, MachineSpecifications info)
         {
             if (id != ConnectionId)
                 return;
             
             
-            if(info is MachineLoad)
-            {
-                Load = info as MachineLoad;
-            }
-
-            if(info is MachineSpecifications)
-                TargedModule.ModulesHostSpecs = info as MachineSpecifications;
+            TargedModule.ModulesHostSpecs = info;
         }
     }
 }

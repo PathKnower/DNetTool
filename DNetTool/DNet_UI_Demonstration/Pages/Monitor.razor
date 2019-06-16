@@ -1,0 +1,47 @@
+﻿@page "/monitor"
+@inherits Logic.UIMonitorSevice
+
+<h1>Monitor</h1>
+
+@*<p>Successfully connected to HUB: @HubGUID</p>*@
+
+<button class="btn btn-primary" onclick="@BeginMonitor">Begin monitor</button>
+
+
+
+@if (Modules == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Идентификатор модуля</th>
+                <th>Тип Модуля</th>
+                <th>Использование процессора в %</th>
+                <th>Использование памяти в %</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var module in Modules)
+            {
+                <tr>
+                    <td>@module.TargedModule.ConnectionID</td>
+                    <td>@module.TargedModule.ModuleType</td>
+                    <td>@module.Load.CPULoad</td>
+                    <td>@module.Load.MemoryLoad</td>
+                    @*<td>@forecast.Date.ToShortDateString()</td>*@
+                    @*<td>@forecast.TemperatureC</td>*@
+                    @*<td>@forecast.TemperatureF</td>*@
+                    @*<td>@forecast.Summary</td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@*<button class="btn btn-primary" onclick="@SendTask">Send test task</button>*@
+
+@*<p>Result recieved: @SomeThing</p>*@

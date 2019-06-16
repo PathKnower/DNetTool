@@ -39,7 +39,7 @@ namespace DNet_UI_Demonstration
             services.AddSingleton<IMachineInfoCollectorService, MachineInfoCollectorService>();
 
             //register twice due the backward compatibility
-            services.AddSingleton<IUIConnect, UIConnect>();
+            services.AddSingleton<UIConnect>();
             services.AddSingleton<IConnect, UIConnect>();
 
             services.AddSingleton<IConnectionService, ConnectionService>();

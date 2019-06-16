@@ -18,8 +18,10 @@ namespace DNet_Hub.Hubs
     {
         private static string HubGUID = null;
 
-        public delegate void MachineHardwareEvent(string id, object info);
-        public event MachineHardwareEvent UpdatedMachineInfo;
+        public delegate void MachineHardwareEvent(string id, MachineSpecifications info);
+        public delegate void MachineLoadEvent(string id, MachineLoad info);
+        public static event MachineHardwareEvent UpdatedMachineInfo;
+        public static event MachineLoadEvent UpdateMachineLoad;
 
         private ILogger<MainHub> _logger;
         private ITaskHandlerService _taskHandlerService;
@@ -169,7 +171,8 @@ namespace DNet_Hub.Hubs
 
         public async Task RecieveModuleActivity(MachineLoad machineLoad)
         {
-            UpdatedMachineInfo?.Invoke(Context.ConnectionId, machineLoad);
+            //_logger.LogDebug($"Update machine load on machine {Context.ConnectionId} \n CPU Load: {machineLoad.CPULoad}% , Memory Load {machineLoad.MemoryLoad}%");
+            UpdateMachineLoad?.Invoke(Context.ConnectionId, machineLoad);
         }
 
         #endregion
@@ -178,7 +181,7 @@ namespace DNet_Hub.Hubs
 
         public async Task ShareModuleInfo()
         {
-            await this.Clients.Caller.SendAsync("RecieveModuleInfo", Modules);
+            await this.Clients.Caller.SendAsync("RecieveModuleInfo", Modules.ToArray());
         }
 
         //TODO: Set IP adress to module

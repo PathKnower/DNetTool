@@ -55,7 +55,7 @@ namespace DNet_Communication.Connection
             _hubConnection.On("CollectMachineInfo", GetMachineInfo);
             _hubConnection.On("UpdateMachineLoad", GetMachineLoad);
 
-            _moduleLoadNotificationTimer = new Timer(TimeSpan.FromSeconds(30).TotalMilliseconds)
+            _moduleLoadNotificationTimer = new Timer(TimeSpan.FromSeconds(5).TotalMilliseconds)
             {
                 AutoReset = true
             };
@@ -165,6 +165,19 @@ namespace DNet_Communication.Connection
             return true;
         }
 
+        public async Task HubRequest(string methodName)
+        {
+            if (!IsConnected)
+            {
+                //Handle connection
+                return;
+            }
+
+            _logger.LogDebug($"{GetCallerName()} send to \'{methodName}\'");
+            await _hubConnection.SendAsync(methodName);
+        }
+
+
         public virtual async Task CollectMachineInfo()
         {
             try
@@ -204,9 +217,10 @@ namespace DNet_Communication.Connection
 
         #region Helpers
 
-        protected void _moduleLoadNotificationTimer_Elapsed(object sender, ElapsedEventArgs e)
+        protected async void _moduleLoadNotificationTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            UpdateMachineLoad();
+            //_logger.LogDebug("Load Notidication Timer Elapsed!");
+            await UpdateMachineLoad();
         }
 
         protected virtual void CheckConnectionURI(ref string uri)
@@ -244,7 +258,8 @@ namespace DNet_Communication.Connection
             _serviceCollector.Dispose();
         }
 
-        
+       
+
 
         #endregion
     }
