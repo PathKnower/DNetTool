@@ -45,6 +45,9 @@ namespace DNet_Hub.Hubs
 
             if (Modules == null)
                 Modules = new List<ModuleHubWrapper>();
+
+            if (TaskHistory == null)
+                TaskHistory = new List<DNet_DataContracts.Processing.Task>();
         }
 
         #region Properties
@@ -52,12 +55,15 @@ namespace DNet_Hub.Hubs
         /// <summary>
         /// Store module connection id (key) and module group (value)
         /// </summary>
-        private static Dictionary<string, string> UserGroup { get; set; }
+        public static Dictionary<string, string> UserGroup { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        private static List<ModuleHubWrapper> Modules { get; set; } 
+        public static List<ModuleHubWrapper> Modules { get; set; } 
+
+
+        private static List<DNet_DataContracts.Processing.Task> TaskHistory { get; set; }
 
         #endregion
 
@@ -122,25 +128,15 @@ namespace DNet_Hub.Hubs
 
         public async Task TaskReciever(DNet_DataContracts.Processing.Task task)
         {
-            //_taskHandlerService.TaskEvaluate(task);
-
-
             task.RequestedBy = Modules.FirstOrDefault(x => x.ConnectionId == Context.ConnectionId)?.TargedModule;
 
-            var modules = Modules.Where(x => task.ModuleType.Contains(x.TargedModule.ModuleType));
+            await _loadBalancerService.SelectTargetModule(task, this);
+        }
 
-            await this.Clients.Clients(modules.Select(x => x.ConnectionId).ToList()).SendAsync("GetMachineLoad"); //Collect all load from potential modules
-
-            //end this function here
-
-            await _loadBalancerService.SelectTargetModule();
-
-            //select module to process
-
-            var module = modules.FirstOrDefault();
-            task.Executor = module.TargedModule;
-
-            await this.Clients.Client(module.ConnectionId).SendAsync("TaskRecieve", task);
+        public async Task SendTask(string connectionId, DNet_DataContracts.Processing.Task task)
+        {
+            TaskHistory.Add(task);
+            await this.Clients.Client(connectionId).SendAsync("TaskRecieve", task);
         }
 
         public async Task TaskResult(DNet_DataContracts.Processing.Task task)
@@ -160,7 +156,7 @@ namespace DNet_Hub.Hubs
         #region Maintance region
 
         /// <summary>
-        /// 
+        /// Machine info handler
         /// </summary>
         /// <param name="moduleInfo"></param>
         /// <returns></returns>
@@ -179,11 +175,23 @@ namespace DNet_Hub.Hubs
 
         #region Helpers
 
+        public async Task RequestLoadUpdate(IEnumerable<ModuleHubWrapper> modules)
+        {
+            await this.Clients.Clients(modules.Select(x => x.ConnectionId).
+                ToList()).SendAsync("GetMachineLoad"); //Collect all load from potential modules
+        }
+
+
         public async Task ShareModuleInfo()
         {
             await this.Clients.Caller.SendAsync("RecieveModuleInfo", Modules.ToArray());
         }
 
+
+        public async Task ShareTaskInfo()
+        {
+            await this.Clients.Caller.SendAsync("RecieveTaskInfo", TaskHistory.ToArray());
+        }
         //TODO: Set IP adress to module
 
         #endregion

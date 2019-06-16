@@ -16,6 +16,9 @@ namespace DNet_UI_Demonstration.Logic
         [Parameter]
         internal Data.ModuleWrapper[] Modules { get; set; }
 
+        bool moduleVisibility = false;
+        internal string hideStyle = "display:none;";
+
         private Timer timer;
 
         public UIMonitorSevice() { }
@@ -56,5 +59,6 @@ namespace DNet_UI_Demonstration.Logic
             Modules = modules;
             Invoke(StateHasChanged);
         }
+
     }
 }

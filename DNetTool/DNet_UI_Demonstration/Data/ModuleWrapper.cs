@@ -13,6 +13,7 @@ namespace DNet_UI_Demonstration.Data
 
         public MachineLoad Load { get; set; }
 
+
         public ModuleWrapper()
         {
 

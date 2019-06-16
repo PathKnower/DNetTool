@@ -1,10 +1,53 @@
 ﻿@page "/task"
 @inherits Logic.UITaskHandlerComponent
 
-<h1>Send task</h1>
+<h1>Task demo zone</h1>
 
 @*<p>Successfully connected to HUB: @HubGUID</p>*@
 
 <button class="btn btn-primary" onclick="@SendTask">Send test task</button>
+
+<button class="btn btn-primary" onclick="@BeginMonitor">Begin monitor</button>
+
+@if (Tasks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Идентификатор задачи</th>
+                <th>Тип подходящих модулей</th>
+                <th>Тип модуля отправителя</th>
+                <th>Тип модуля исполнителя</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Tasks)
+            {
+                <tr style="border-radius: 10px; box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);" @*onclick="@SomeFunc"*@>
+                    <td>
+                        @task.Id
+                        @*<p style="@hideStyle"> <strong>Количество ядер процессора: </strong> <br /> <br /> @if(module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUCores  </p>*@
+                    </td>
+                    <td>
+                        @task.ModuleType
+                        @*<p style="@hideStyle"> <strong>Частота процессора: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUClock МГц </p>*@
+                    </td>
+                    <td>
+                        @task.RequestedBy?.ModuleType 
+                        @*<p style="@hideStyle"> <strong>Количество ОЗУ: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.AllMemory Мегабайт </p>*@
+                    </td>
+                    <td>
+                        @task.Executor?.ModuleType
+                        @*<p style="@hideStyle"> <strong>Очки производитльности: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.PerformancePoint очков </p>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 <p>Result recieved: @SomeThing</p>

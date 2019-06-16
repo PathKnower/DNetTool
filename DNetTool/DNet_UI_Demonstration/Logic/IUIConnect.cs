@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 namespace DNet_UI_Demonstration.Logic
 {
     public delegate void UIModuleDemonstarion(ModuleWrapper[] modules);
+    public delegate void UITaskDemonstration(DNet_DataContracts.Processing.Task[] tasks);
 
     public interface IUIConnect : IConnect
     {
         event UIModuleDemonstarion ModuleInfoRecieved;
+        event UITaskDemonstration TaskInfoRecieved;
     }
 }

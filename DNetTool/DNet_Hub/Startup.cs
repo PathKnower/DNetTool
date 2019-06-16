@@ -35,10 +35,10 @@ namespace DNet_Hub
 
             services.AddScoped<ITaskHandlerService, TaskHandlerService>();
             services.AddScoped<ILoadBalancerService, LoadBalancerService>();
+            services.AddScoped<ITaskEvaluationAlghoritm, TaskEvaluationAlghoritm>();
 
             services.AddSignalR().AddHubOptions<MainHub>(options =>
             { 
-               
             }); 
         }
 

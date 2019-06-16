@@ -3,10 +3,8 @@
 
 <h1>Monitor</h1>
 
-@*<p>Successfully connected to HUB: @HubGUID</p>*@
 
 <button class="btn btn-primary" onclick="@BeginMonitor">Begin monitor</button>
-
 
 
 @if (Modules == null)
@@ -20,28 +18,32 @@ else
             <tr>
                 <th>Идентификатор модуля</th>
                 <th>Тип Модуля</th>
-                <th>Использование процессора в %</th>
-                <th>Использование памяти в %</th>
+                <th>Использование процессора</th>
+                <th>Использование памяти</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var module in Modules)
             {
-                <tr>
-                    <td>@module.TargedModule.ConnectionID</td>
-                    <td>@module.TargedModule.ModuleType</td>
-                    <td>@module.Load.CPULoad</td>
-                    <td>@module.Load.MemoryLoad</td>
-                    @*<td>@forecast.Date.ToShortDateString()</td>*@
-                    @*<td>@forecast.TemperatureC</td>*@
-                    @*<td>@forecast.TemperatureF</td>*@
-                    @*<td>@forecast.Summary</td>*@
+                <tr style="border-radius: 10px; box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);" @*onclick="@SomeFunc"*@>
+                    <td>
+                        @module.TargedModule.ConnectionID
+                        @*<p style="@hideStyle"> <strong>Количество ядер процессора: </strong> <br /> <br /> @if(module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUCores  </p>*@
+                    </td>
+                    <td>
+                        @module.TargedModule.ModuleType
+                        @*<p style="@hideStyle"> <strong>Частота процессора: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUClock МГц </p>*@
+                    </td>
+                    <td>
+                        @module.Load.CPULoad %
+                        @*<p style="@hideStyle"> <strong>Количество ОЗУ: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.AllMemory Мегабайт </p>*@
+                    </td>
+                    <td>
+                        @module.Load.MemoryLoad %
+                        @*<p style="@hideStyle"> <strong>Очки производитльности: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.PerformancePoint очков </p>*@
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 }
-
-@*<button class="btn btn-primary" onclick="@SendTask">Send test task</button>*@
-
-@*<p>Result recieved: @SomeThing</p>*@

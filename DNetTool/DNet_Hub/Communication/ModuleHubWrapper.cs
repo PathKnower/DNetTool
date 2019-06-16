@@ -17,6 +17,8 @@ namespace DNet_Hub.Communication
 
         public MachineLoad Load { get; set; }
 
+        public DateTime LastLoadUpdate { get; set; }
+
         public ModuleHubWrapper()
         {
             TargedModule = new Module();
@@ -48,6 +50,11 @@ namespace DNet_Hub.Communication
             
             
             TargedModule.ModulesHostSpecs = info;
+        }
+
+        public void WaitTillGetNewLoadInfo()
+        {
+
         }
     }
 }
