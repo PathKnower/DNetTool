@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DNet_Communication.Connection;
+using DNet_Processing.Processing;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +17,8 @@ namespace DNet_Processing
     public class Program
     {
         static Logger _logger;
+
+        static Random rnd = new Random();
 
         public static void Main(string[] args)
         {
@@ -33,7 +36,10 @@ namespace DNet_Processing
 
                 var connectionService = (IConnectionService)host.Services.GetService(typeof(IConnectionService));
                 connectionService.ScheduleConnectionInitialize(TimeSpan.FromSeconds(5), "Processing"); //initialize connection without user input
-                
+
+                var taskHandlingService = (IProcessingModuleDemontrationTaskHandlerService)host.Services.GetService(typeof(IProcessingModuleDemontrationTaskHandlerService));
+                taskHandlingService.Initialize();
+
                 #endregion
 
                 host.WaitForShutdown();
@@ -54,8 +60,12 @@ namespace DNet_Processing
         {
             var builder = WebHost.CreateDefaultBuilder(args);
 
+            string httpUri = "http://*:";
+
+            httpUri += rnd.Next(10000, 65000);
+
             builder.UseStartup<Startup>();
-            builder.UseUrls("http://*:34684");
+            builder.UseUrls(httpUri);
             builder.UseNLog();
 
             return builder.Build();

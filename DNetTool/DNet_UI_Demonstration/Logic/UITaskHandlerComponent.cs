@@ -26,8 +26,9 @@ namespace DNet_UI_Demonstration.Logic
         internal DNet_DataContracts.Processing.Task[] Tasks { get; set; }
 
         internal string HubGUID = string.Empty;
-
         internal string SomeThing = string.Empty;
+
+        internal string TaskModuleTypes { get; set; }
 
         private Timer timer;
 
@@ -105,7 +106,7 @@ namespace DNet_UI_Demonstration.Logic
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = TaskType.Search,
-                ModuleType = "DB, DB_Postgres"
+                ModuleType = TaskModuleTypes
             };
 
             SearchTaskContext context = new SearchTaskContext
@@ -120,8 +121,23 @@ namespace DNet_UI_Demonstration.Logic
 
             task.SearchContext = context;
 
-            await _taskHandlerService.SendTask(null);
+            await _taskHandlerService.SendTask(task);
         }
 
+        internal string GetTaskStatus(DNet_DataContracts.Processing.Task task)
+        {
+            string res = string.Empty;
+
+            if (task.IsFinished)
+                res = "Завершена";
+            else if (task.IsExecuting)
+                res = "Выполняется";
+            else if (task.IsCanceled)
+                res = "Отменена";
+            else
+                res = "Не найден исполнитель";
+
+            return res;
+        }
     }
 }

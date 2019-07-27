@@ -16,8 +16,8 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Идентификатор модуля</th>
                 <th>Тип Модуля</th>
+                <th>Идентификатор модуля</th>
                 <th>Использование процессора</th>
                 <th>Использование памяти</th>
             </tr>
@@ -25,13 +25,13 @@ else
         <tbody>
             @foreach (var module in Modules)
             {
-                <tr style="border-radius: 10px; box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);" @*onclick="@SomeFunc"*@>
+                <tr @*style="border-radius: 10px; box-shadow: 0 0 10px 5px rgba(0,0,0,0.2); padding: 10px;"*@ @*onclick="@SomeFunc"*@>
                     <td>
-                        @module.TargedModule.ConnectionID
+                        @module.TargedModule.ModuleType
                         @*<p style="@hideStyle"> <strong>Количество ядер процессора: </strong> <br /> <br /> @if(module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUCores  </p>*@
                     </td>
                     <td>
-                        @module.TargedModule.ModuleType
+                        @module.TargedModule.ConnectionID
                         @*<p style="@hideStyle"> <strong>Частота процессора: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUClock МГц </p>*@
                     </td>
                     <td>

@@ -135,6 +135,7 @@ namespace DNet_Hub.Hubs
 
         public async Task SendTask(string connectionId, DNet_DataContracts.Processing.Task task)
         {
+            task.IsExecuting = true;
             TaskHistory.Add(task);
             await this.Clients.Client(connectionId).SendAsync("TaskRecieve", task);
         }
@@ -142,6 +143,9 @@ namespace DNet_Hub.Hubs
         public async Task TaskResult(DNet_DataContracts.Processing.Task task)
         {
             _logger.LogDebug($"Task with ID: \'{task.Id}\' successfully finished");
+            var temp = TaskHistory.FirstOrDefault(x => x.Id == task.Id);
+            TaskHistory.Remove(temp);
+            TaskHistory.Add(task);
             await this.Clients.Client(task.RequestedBy.ConnectionID).SendAsync("ResultRecieve", task);
         }
 

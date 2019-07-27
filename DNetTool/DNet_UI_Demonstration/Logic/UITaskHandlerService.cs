@@ -29,42 +29,31 @@ namespace DNet_UI_Demonstration.Logic
 
         public override async System.Threading.Tasks.Task SendTask(DNet_DataContracts.Processing.Task task)
         {
-            task = new DNet_DataContracts.Processing.Task
-            {
-                Id = Guid.NewGuid().ToString(),
-                Type = TaskType.Search,
-                ModuleType = "DB, DB_Postgres",
-                //TestAction = new Action(() =>
-                //{
-                //    int x = 60, y = 10;
+            //task = new DNet_DataContracts.Processing.Task
+            //{
+            //    Id = Guid.NewGuid().ToString(),
+            //    Type = TaskType.Search,
+            //    ModuleType = "DB, DB_Postgres",
+            //    //TestAction = new Action(() =>
+            //    //{
+            //    //    int x = 60, y = 10;
 
-                //    Console.WriteLine(x + y);
-                //    Console.WriteLine("Hello!");
-                //})
-            };
+            //    //    Console.WriteLine(x + y);
+            //    //    Console.WriteLine("Hello!");
+            //    //})
+            //};
 
-            SearchTaskContext context = new SearchTaskContext
-            {
-                SearchArea = "user",
-                ApproximateResultTypeMemoryConsumption = _typeEvaluateService.TypeMemoryConsumptionDictionary["User"]
-            };
-            task.SearchContext = context;
+            //SearchTaskContext context = new SearchTaskContext
+            //{
+            //    SearchArea = "user",
+            //    ApproximateResultTypeMemoryConsumption = _typeEvaluateService.TypeMemoryConsumptionDictionary["User"]
+            //};
+            //task.SearchContext = context;
 
 
             await base.SendTask(task);
         }
 
-        private void SendCalculateTask()
-        {
-            DNet_DataContracts.Processing.Task task = new DNet_DataContracts.Processing.Task
-            {
-
-            };
-
-            ProcessingTaskContext calculateTask = new ProcessingTaskContext
-            {
-                
-            };
-        }
+        
     }
 }

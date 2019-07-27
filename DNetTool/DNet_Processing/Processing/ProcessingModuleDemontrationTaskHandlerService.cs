@@ -12,15 +12,22 @@ namespace DNet_Processing.Processing
         public ProcessingModuleDemontrationTaskHandlerService(IConnect connectionInstance) : 
             base (connectionInstance)
         {
-            TaskRecieve += ProcessingModuleDemontrationTaskHandler_TaskRecieve;
+            
+        }
+
+        public void Initialize()
+        {
             _connectionInstance.TaskRecieve += ProcessingModuleDemontrationTaskHandler_TaskRecieve;
         }
 
         private void ProcessingModuleDemontrationTaskHandler_TaskRecieve(DNet_DataContracts.Processing.Task task)
         {
-            Console.WriteLine(task.Id);
+            task.SearchContext.Result = "Processing result";
 
-            task.TestAction.Invoke();
+            task.IsFinished = true;
+
+            _connectionInstance.SendToHub("TaskResult", task);
+            //task.TestAction.Invoke();
         }
     }
 }

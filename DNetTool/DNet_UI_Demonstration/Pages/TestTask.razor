@@ -5,9 +5,26 @@
 
 @*<p>Successfully connected to HUB: @HubGUID</p>*@
 
-<button class="btn btn-primary" onclick="@SendTask">Send test task</button>
 
-<button class="btn btn-primary" onclick="@BeginMonitor">Begin monitor</button>
+
+<div>
+    <div class="input-group mb-3">
+        <input type="text" bind="@TaskModuleTypes" class="form-control" placeholder="Module Type" />
+    </div>
+
+    <div>
+        <button class="btn btn-primary" onclick="@SendTask">Send test task</button>
+    </div>
+
+
+    <p>Result recieved: @SomeThing</p>
+</div>
+
+<div>
+    <button class="btn btn-primary" onclick="@BeginMonitor">Begin monitor</button>
+</div>
+
+
 
 @if (Tasks == null)
 {
@@ -20,34 +37,37 @@ else
             <tr>
                 <th>Идентификатор задачи</th>
                 <th>Тип подходящих модулей</th>
-                <th>Тип модуля отправителя</th>
                 <th>Тип модуля исполнителя</th>
+                <th>Идентификатор исполнителя</th>
+                <th>Статус</th>
+                <th>Результат</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var task in Tasks)
             {
-                <tr style="border-radius: 10px; box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);" @*onclick="@SomeFunc"*@>
-                    <td>
-                        @task.Id
-                        @*<p style="@hideStyle"> <strong>Количество ядер процессора: </strong> <br /> <br /> @if(module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUCores  </p>*@
-                    </td>
-                    <td>
-                        @task.ModuleType
-                        @*<p style="@hideStyle"> <strong>Частота процессора: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUClock МГц </p>*@
-                    </td>
-                    <td>
-                        @task.RequestedBy?.ModuleType 
-                        @*<p style="@hideStyle"> <strong>Количество ОЗУ: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.AllMemory Мегабайт </p>*@
-                    </td>
-                    <td>
-                        @task.Executor?.ModuleType
-                        @*<p style="@hideStyle"> <strong>Очки производитльности: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.PerformancePoint очков </p>*@
-                    </td>
-                </tr>
+            <tr @*style="border-radius: 10px; box-shadow: 0 0 10px 5px rgba(0,0,0,0.2);"*@ @*onclick="@SomeFunc"*@>
+                <td>
+                    @task.Id
+                    @*<p style="@hideStyle"> <strong>Количество ядер процессора: </strong> <br /> <br /> @if(module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUCores  </p>*@
+                </td>
+                <td>
+                    @task.ModuleType
+                    @*<p style="@hideStyle"> <strong>Частота процессора: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.CPUClock МГц </p>*@
+                </td>
+                <td>
+                    @task.Executor?.ModuleType
+                    @*<p style="@hideStyle"> <strong>Количество ОЗУ: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.AllMemory Мегабайт </p>*@
+                </td>
+                <td>
+                    @task.Executor?.ConnectionID
+                    @*<p style="@hideStyle"> <strong>Очки производитльности: </strong> <br /> <br /> @if (module.TargedModule.ModulesHostSpecs != null) @module.TargedModule.ModulesHostSpecs.PerformancePoint очков </p>*@
+                </td>
+                <td>@GetTaskStatus(task)</td>
+                <td>@task.SearchContext.Result</td>
+            </tr>
             }
         </tbody>
     </table>
 }
 
-<p>Result recieved: @SomeThing</p>

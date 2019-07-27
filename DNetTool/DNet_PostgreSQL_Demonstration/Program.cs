@@ -23,8 +23,8 @@ namespace DNet_PostgreSQL_Demonstration
         {
             //CreateHostBuilder(args).Build().Run();
 
-            LogManager.Configuration = new NLog.Config.LoggingConfiguration();
-            LogManager.Configuration.AddTarget("console", new NLog.Targets.ColoredConsoleTarget());
+            //LogManager.Configuration = new NLog.Config.LoggingConfiguration();
+            //LogManager.Configuration.AddTarget("console", new NLog.Targets.ColoredConsoleTarget());
 
             _logger = LogManager.GetCurrentClassLogger();
 

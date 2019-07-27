@@ -10,7 +10,7 @@ namespace DNet_Processing.Processing
 {
     interface IProcessingModuleDemontrationTaskHandlerService : IBaseTaskHandlerService
     {
-
+        void Initialize();
 
     }
 }

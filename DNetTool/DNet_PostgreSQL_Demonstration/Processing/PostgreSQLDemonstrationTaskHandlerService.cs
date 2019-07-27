@@ -73,7 +73,7 @@ namespace DNet_PostgreSQL_Demonstration.Processing
             }
 
             task.IsFinished = true;
-            task.SearchContext.Result = "sample";
+            task.SearchContext.Result = "Scope from DB";
 
             await _connectionInstance.SendToHub("TaskResult", task);
 

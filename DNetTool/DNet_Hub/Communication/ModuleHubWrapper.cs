@@ -17,7 +17,7 @@ namespace DNet_Hub.Communication
 
         public MachineLoad Load { get; set; }
 
-        public DateTime LastLoadUpdate { get; set; }
+        //public DateTime LastLoadUpdate { get; set; }
 
         public ModuleHubWrapper()
         {
